@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperium Higienistek × AI - Automatyczne Plany Higieny</title>
+    <meta name="description" content="AI-powered kreator planów higieny jamy ustnej. Spersonalizowane plany higieny w sekundach dla higienistek stomatologicznych.">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /*
+        === GOOGLE APPS SCRIPT CODE ===
+        1. Go to script.google.com → New Project
+        2. Paste this code:
+        
+        function doPost(e) {
+          try {
+            // Enable CORS
+            var sheet = SpreadsheetApp.openById('YOUR_SHEET_ID').getActiveSheet();
+            var data = JSON.parse(e.postData.contents);
+            
+            // Add row: timestamp, name, email
+            sheet.appendRow([new Date(), data.imie, data.email]);
+            
+            return ContentService
+              .createTextOutput(JSON.stringify({result: 'success', message: 'Dane zostały zapisane'}))
+              .setMimeType(ContentService.MimeType.JSON)
+              .setHeaders({'Access-Control-Allow-Origin': '*'});
+          } catch (error) {
+            return ContentService
+              .createTextOutput(JSON.stringify({result: 'error', message: error.toString()}))
+              .setMimeType(ContentService.MimeType.JSON)
+              .setHeaders({'Access-Control-Allow-Origin': '*'});
+          }
+        }
+        
+        function doOptions(e) {
+          return ContentService
+            .createTextOutput('')
+            .setHeaders({
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'POST,OPTIONS',
+              'Access-Control-Allow-Headers': 'Content-Type'
+            });
+        }
+        
+        3. Deploy → New Deployment → Web App → Execute as: Me, Who has access: Anyone
+        4. Copy the Web App URL → replace GOOGLE_APPS_SCRIPT_URL below
+        */
+
+        :root {
+            --primary-pink: #f472b6;
+            --primary-teal: #2dd4bf;
+            --soft-pink: #fce7f3;
+            --soft-teal: #ccfbf1;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-white: #ffffff;
+            --bg-light: #f9fafb;
+            --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-medium: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--soft-pink) 0%, var(--bg-white) 50%, var(--soft-teal) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated tooth background */
+        .tooth-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+        }
+
+        .tooth {
+            position: absolute;
+            font-size: 24px;
+            animation: float-down linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float-down {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Container and layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 0 40px;
+        }
+
+        .logo-section {
+            margin-bottom: 30px;
+        }
+
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: var(--text-light);
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.7;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-teal) 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 40px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgb(0 0 0 / 0.15);
+        }
+
+        /* Main content area */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 60px;
+                align-items: start;
+            }
+        }
+
+        /* QR Section */
+        .qr-section {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(10px);
+        }
+
+        .qr-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .qr-subtitle {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .qr-code {
+            display: inline-block;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 15px;
+        }
+
+        .qr-url {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            word-break: break-all;
+        }
+
+        /* Form section */
+        .form-section {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-pink);
+            margin-top: 2px;
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-light);
+            margin-bottom: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-teal) 100%);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 20px -5px rgb(0 0 0 / 0.15);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Status messages */
+        .status-message {
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--primary-pink);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .header {
+                padding: 40px 0 30px;
+            }
+
+            .form-section,
+            .qr-section {
+                padding: 25px 20px;
+            }
+
+            .checkbox-group {
+                align-items: flex-start;
+            }
+
+            input[type="checkbox"] {
+                margin-top: 3px;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated tooth background -->
+    <div class="tooth-animation" id="toothAnimation"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <h1 class="logo-text">Imperium Higienistek × AI</h1>
+                <p class="subtitle">AI-powered kreator planów higieny jamy ustnej</p>
+                <p class="description">
+                    Automatyczne, spersonalizowane plany higieny w sekundach. 
+                    Narzędzie stworzone specjalnie dla higienistek stomatologicznych, 
+                    które pozwala na błyskawiczne tworzenie profesjonalnych planów 
+                    higieny dopasowanych do indywidualnych potrzeb pacjentów.
+                </p>
+                <a href="index.html" class="cta-button">🦷 Wypróbuj Aplikację</a>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- QR Code Section -->
+            <section class="qr-section">
+                <h2 class="qr-title">Skanuj QR Code</h2>
+                <p class="qr-subtitle">Udostępnij tę stronę na konferencji</p>
+                <div class="qr-code" id="qrCode">
+                    <!-- QR code will be generated here -->
+                </div>
+                <p class="qr-url">numerika-ai.github.io/higienistka/landing.html</p>
+            </section>
+
+            <!-- Lead Capture Form -->
+            <section class="form-section">
+                <h2 class="form-title">Bądź na bieżąco</h2>
+                <p class="form-subtitle">Otrzymuj informacje o nowościach i aktualizacjach</p>
+                
+                <form id="leadForm">
+                    <div id="statusMessage"></div>
+                    
+                    <div class="form-group">
+                        <label for="imie">Imię *</label>
+                        <input type="text" id="imie" name="imie" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Adres e-mail *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="consent" name="consent" required>
+                        <label for="consent" class="checkbox-label">
+                            Wyrażam zgodę na przetwarzanie moich danych osobowych w celu 
+                            otrzymywania informacji o produktach i usługach Numerika.ai 
+                            zgodnie z RODO (Rozporządzenie UE 2016/679). *
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        Zapisz się!
+                    </button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 <a href="https://numerika.ai" target="_blank">Numerika.ai</a></p>
+    </footer>
+
+    <script>
+        // QR Code generation (inline SVG)
+        function generateQR() {
+            const qrContainer = document.getElementById('qrCode');
+            const url = 'https://numerika-ai.github.io/higienistka/landing.html';
+            
+            // Simple QR code SVG for the URL (using a basic pattern)
+            // In production, you'd use a proper QR library, but this creates a recognizable QR-like pattern
+            const qrSvg = `
+                <svg width="160" height="160" viewBox="0 0 21 21" style="background: white;">
+                    <!-- This is a simplified QR pattern. In production, use qrcode.js or similar -->
+                    <rect width="21" height="21" fill="white"/>
+                    <g fill="black">
+                        <!-- Corner markers -->
+                        <rect x="0" y="0" width="7" height="7"/>
+                        <rect x="14" y="0" width="7" height="7"/>
+                        <rect x="0" y="14" width="7" height="7"/>
+                        <rect x="2" y="2" width="3" height="3" fill="white"/>
+                        <rect x="16" y="2" width="3" height="3" fill="white"/>
+                        <rect x="2" y="16" width="3" height="3" fill="white"/>
+                        
+                        <!-- Data pattern (simplified) -->
+                        <rect x="8" y="1" width="1" height="1"/>
+                        <rect x="10" y="1" width="1" height="1"/>
+                        <rect x="12" y="1" width="1" height="1"/>
+                        <rect x="1" y="8" width="1" height="1"/>
+                        <rect x="1" y="10" width="1" height="1"/>
+                        <rect x="1" y="12" width="1" height="1"/>
+                        <rect x="19" y="8" width="1" height="1"/>
+                        <rect x="19" y="10" width="1" height="1"/>
+                        <rect x="19" y="12" width="1" height="1"/>
+                        <rect x="8" y="19" width="1" height="1"/>
+                        <rect x="10" y="19" width="1" height="1"/>
+                        <rect x="12" y="19" width="1" height="1"/>
+                        
+                        <!-- Central pattern -->
+                        <rect x="9" y="9" width="3" height="3"/>
+                        <rect x="10" y="10" width="1" height="1" fill="white"/>
+                    </g>
+                </svg>
+            `;
+            
+            qrContainer.innerHTML = qrSvg;
+        }
+
+        // Animated teeth background
+        function createToothAnimation() {
+            const container = document.getElementById('toothAnimation');
+            
+            function createTooth() {
+                const tooth = document.createElement('div');
+                tooth.className = 'tooth';
+                tooth.textContent = '🦷';
+                
+                // Random horizontal position
+                tooth.style.left = Math.random() * 100 + 'vw';
+                
+                // Random animation duration (8-15 seconds)
+                const duration = 8 + Math.random() * 7;
+                tooth.style.animationDuration = duration + 's';
+                
+                // Random delay
+                tooth.style.animationDelay = Math.random() * 5 + 's';
+                
+                container.appendChild(tooth);
+                
+                // Remove tooth after animation
+                setTimeout(() => {
+                    tooth.remove();
+                }, (duration + 5) * 1000);
+            }
+            
+            // Create initial teeth
+            for (let i = 0; i < 15; i++) {
+                setTimeout(createTooth, Math.random() * 3000);
+            }
+            
+            // Continue creating teeth
+            setInterval(() => {
+                if (document.querySelectorAll('.tooth').length < 20) {
+                    createTooth();
+                }
+            }, 800);
+        }
+
+        // Form handling
+        document.getElementById('leadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const statusMessage = document.getElementById('statusMessage');
+            const form = e.target;
+            
+            // Get form data
+            const formData = {
+                imie: form.imie.value.trim(),
+                email: form.email.value.trim(),
+                consent: form.consent.checked
+            };
+            
+            // Validation
+            if (!formData.imie || !formData.email || !formData.consent) {
+                showStatus('error', 'Wszystkie pola są wymagane.');
+                return;
+            }
+            
+            if (!isValidEmail(formData.email)) {
+                showStatus('error', 'Podaj prawidłowy adres e-mail.');
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="loading"></div> Wysyłanie...';
+            
+            try {
+                // Submit to Google Apps Script
+                const response = await fetch('GOOGLE_APPS_SCRIPT_URL', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.result === 'success') {
+                    showStatus('success', 'Dziękujemy! Twoje dane zostały zapisane.');
+                    form.reset();
+                } else {
+                    throw new Error(result.message || 'Wystąpił błąd podczas wysyłania.');
+                }
+                
+            } catch (error) {
+                console.error('Form submission error:', error);
+                showStatus('error', 'Wystąpił błąd podczas wysyłania. Spróbuj ponownie później.');
+            }
+            
+            // Reset button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Zapisz się!';
+        });
+        
+        function showStatus(type, message) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+            
+            // Auto-hide after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusEl.innerHTML = '';
+                }, 5000);
+            }
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            generateQR();
+            createToothAnimation();
+        });
+    </script>
+</body>
+</html>
