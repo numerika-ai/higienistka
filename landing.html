@@ -180,6 +180,124 @@
             box-shadow: 0 15px 25px -5px rgb(0 0 0 / 0.15);
         }
 
+        /* Benefits section */
+        .benefits {
+            padding: 50px 0;
+        }
+
+        .benefits-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .benefits-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 1.05rem;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 640px) {
+            .benefits-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 960px) {
+            .benefits-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 28px 24px;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .benefit-icon {
+            font-size: 2.4rem;
+            margin-bottom: 14px;
+        }
+
+        .benefit-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .benefit-card p {
+            font-size: 0.93rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .benefit-highlight {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-pink), var(--primary-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        /* Testimonial / stat bar */
+        .stat-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            padding: 24px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-pink), var(--primary-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
         /* Main content area */
         .main-content {
             display: grid;
@@ -439,6 +557,69 @@
                 <a href="index.html" class="cta-button">🦷 Wypróbuj Aplikację</a>
             </div>
         </header>
+
+        <!-- Benefits section -->
+        <section class="benefits">
+            <h2 class="benefits-title">Dlaczego warto? 💡</h2>
+            <p class="benefits-subtitle">Twój czas jest na wagę złota. AI robi w sekundy to, co zabiera Ci minuty przy każdym pacjencie.</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⏱️</div>
+                    <h3>Oszczędność czasu</h3>
+                    <p>Plan higieny w <span class="benefit-highlight">30 sekund</span> zamiast 10-15 minut. Przy 8 pacjentach dziennie to <span class="benefit-highlight">dodatkowa godzina</span> — na kolejnego pacjenta lub na siebie.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <h3>Monetyzacja czasu</h3>
+                    <p>Godzina dziennie × 22 dni robocze = <span class="benefit-highlight">22 dodatkowe godziny miesięcznie</span>. To czas na kolejnych pacjentów, szkolenia lub po prostu mniej pracy po godzinach.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏆</div>
+                    <h3>Profesjonalny wizerunek</h3>
+                    <p>Pacjent dostaje <span class="benefit-highlight">wydrukowany, spersonalizowany plan</span> — nie kartkę z notatkami. To buduje zaufanie i wyróżnia Twój gabinet na tle konkurencji.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <h3>Spójność i jakość</h3>
+                    <p>Koniec z zapominaniem o szczegółach pod koniec dnia. AI <span class="benefit-highlight">zawsze pamiętaj</span> o każdym elemencie — od pasty po nitki.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">📱</div>
+                    <h3>Zero instalacji</h3>
+                    <p>Działa w przeglądarce na <span class="benefit-highlight">telefonie, tablecie i komputerze</span>. Żadnych aplikacji do instalowania, żadnych aktualizacji. Otworz i używaj.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔒</div>
+                    <h3>Bezpieczeństwo danych</h3>
+                    <p><span class="benefit-highlight">Żadne dane pacjentów</span> nie są zbierane ani przechowywane. Zgodne z RODO. Plan tworzony jest na Twoim urządzeniu.</p>
+                </div>
+            </div>
+
+            <div class="stat-bar">
+                <div class="stat-item">
+                    <div class="stat-number">30s</div>
+                    <div class="stat-label">czas tworzenia planu</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">39</div>
+                    <div class="stat-label">bloków wiedzy</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">zgodność z RODO</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0 zł</div>
+                    <div class="stat-label">koszt używania</div>
+                </div>
+            </div>
+        </section>
 
         <!-- Main content -->
         <main class="main-content">
