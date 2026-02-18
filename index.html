@@ -309,8 +309,10 @@
                 <div class="plan-output" id="plan-output"></div>
                 <div class="btn-row no-print">
                     <button class="btn btn-outline" onclick="resetPlanner()">🔄 Nowy plan</button>
+                    <button class="btn btn-outline" onclick="copyPlanText()">📋 Kopiuj tekst</button>
                     <button class="btn" onclick="window.print()">🖨️ Drukuj / PDF</button>
                 </div>
+                <div id="copy-toast" style="display:none; text-align:center; margin-top:12px; padding:10px; background:#ccfbf1; border-radius:10px; color:#115e59; font-weight:600;">✅ Skopiowano do schowka!</div>
             </div>
         </div>
         
@@ -672,6 +674,29 @@ async function testApi() {
     } catch(e) {
         alert(`❌ Nie mogę się połączyć: ${e.message}`);
     }
+}
+
+// Copy plan as plain text
+function copyPlanText() {
+    const el = document.getElementById('plan-output');
+    // Get text content, clean up
+    const text = el.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('copy-toast');
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 2000);
+    }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = el.innerText;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        const toast = document.getElementById('copy-toast');
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 2000);
+    });
 }
 
 // Init
