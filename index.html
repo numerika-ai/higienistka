@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦷 Plan Higieny Jamy Ustnej</title>
+    <style>
+        :root {
+            --teal: #0d9488;
+            --teal-light: #ccfbf1;
+            --teal-dark: #115e59;
+            --pink: #ec4899;
+            --bg: #f0fdfa;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .container { max-width: 720px; margin: 0 auto; padding: 20px; }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(13, 148, 136, 0.3);
+        }
+        .header h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        .header p { opacity: 0.9; font-size: 0.95rem; }
+        .header .tooth { font-size: 3rem; margin-bottom: 10px; }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: white;
+            padding: 6px;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--muted);
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: var(--teal);
+            color: white;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+        }
+        .tab:hover:not(.active) { background: var(--teal-light); color: var(--teal-dark); }
+        
+        /* Question Card */
+        .question-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .question-card h3 {
+            color: var(--teal-dark);
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .question-card p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+        
+        .option {
+            display: block;
+            width: 100%;
+            padding: 14px 18px;
+            margin-bottom: 8px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .option:hover { border-color: var(--teal); background: var(--teal-light); }
+        .option.selected { border-color: var(--teal); background: var(--teal-light); color: var(--teal-dark); font-weight: 600; }
+        
+        /* Progress */
+        .progress-bar {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--teal), var(--pink));
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+        .progress-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+        
+        /* Plan Output */
+        .plan-output {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            line-height: 1.7;
+        }
+        .plan-output h2 {
+            color: var(--teal-dark);
+            border-bottom: 2px solid var(--teal-light);
+            padding-bottom: 8px;
+            margin: 24px 0 16px 0;
+        }
+        .plan-output h2:first-child { margin-top: 0; }
+        .plan-output ul { padding-left: 20px; margin: 8px 0; }
+        .plan-output .step {
+            background: var(--teal-light);
+            border-left: 4px solid var(--teal);
+            padding: 14px 18px;
+            border-radius: 0 10px 10px 0;
+            margin: 10px 0;
+        }
+        .plan-output .step-num {
+            font-weight: 700;
+            color: var(--teal);
+            display: block;
+            margin-bottom: 4px;
+        }
+        .plan-output .shopping-item {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 16px;
+            border-radius: 0 10px 10px 0;
+            margin: 8px 0;
+        }
+        .plan-output .zasada {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .plan-output .zasada:last-child { border-bottom: none; }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: var(--teal-dark); transform: translateY(-1px); }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--teal);
+            color: var(--teal);
+        }
+        .btn-outline:hover { background: var(--teal-light); }
+        .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
+        
+        /* Chat */
+        .chat-container {
+            background: var(--card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .chat-header {
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            color: white;
+            padding: 16px 20px;
+            font-weight: 600;
+        }
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .chat-msg {
+            margin-bottom: 12px;
+            max-width: 85%;
+            animation: fadeIn 0.2s ease;
+        }
+        .chat-msg.bot { margin-right: auto; }
+        .chat-msg.user { margin-left: auto; }
+        .chat-msg .bubble {
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        .chat-msg.bot .bubble { background: #f1f5f9; color: var(--text); border-bottom-left-radius: 4px; }
+        .chat-msg.user .bubble { background: var(--teal); color: white; border-bottom-right-radius: 4px; }
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            padding: 16px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .chat-input:focus { border-color: var(--teal); }
+        .chat-send {
+            padding: 12px 20px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .chat-send:hover { background: var(--teal-dark); }
+        .chat-config {
+            padding: 16px 20px;
+            background: #fef3c7;
+            border-bottom: 1px solid #fde68a;
+            font-size: 0.85rem;
+        }
+        .chat-config input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-top: 6px;
+            font-size: 0.85rem;
+        }
+        
+        .hidden { display: none; }
+        
+        /* Print */
+        @media print {
+            .tabs, .header, .btn-row, .no-print { display: none; }
+            .plan-output { box-shadow: none; padding: 0; }
+        }
+        
+        /* Mobile */
+        @media (max-width: 600px) {
+            .container { padding: 12px; }
+            .header { padding: 28px 16px; border-radius: 14px; }
+            .header h1 { font-size: 1.4rem; }
+            .question-card { padding: 20px; }
+            .plan-output { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="tooth">🦷</div>
+            <h1>Plan Higieny Jamy Ustnej</h1>
+            <p>Spersonalizowany plan dla Twojego pacjenta</p>
+        </div>
+        
+        <div class="tabs no-print">
+            <button class="tab active" onclick="switchTab('planner')">📋 Kreator Planu</button>
+            <button class="tab" onclick="switchTab('chat')">💬 Live Chat AI</button>
+        </div>
+        
+        <!-- PLANNER TAB -->
+        <div id="tab-planner">
+            <div id="questions-section">
+                <div class="progress-text" id="progress-text">Pytanie 1 z 7</div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 14.28%"></div></div>
+                <div id="question-container"></div>
+            </div>
+            <div id="plan-section" class="hidden">
+                <div class="plan-output" id="plan-output"></div>
+                <div class="btn-row no-print">
+                    <button class="btn btn-outline" onclick="resetPlanner()">🔄 Nowy plan</button>
+                    <button class="btn" onclick="window.print()">🖨️ Drukuj / PDF</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CHAT TAB -->
+        <div id="tab-chat" class="hidden">
+            <div class="chat-container">
+                <div class="chat-header">🦷 Asystent Higienistki — GPT-OSS 120B</div>
+                <div class="chat-config">
+                    ⚙️ Adres API (LiteLLM): 
+                    <input type="text" id="api-url" value="http://192.168.1.80:4000/v1/chat/completions" placeholder="http://192.168.1.80:4000/v1/chat/completions">
+                    <div style="margin-top:4px; color:#92400e;">Działa tylko w sieci lokalnej. <a href="#" onclick="testApi()">Testuj połączenie</a></div>
+                </div>
+                <div class="chat-messages" id="chat-messages"></div>
+                <div class="chat-input-row">
+                    <input class="chat-input" id="chat-input" placeholder="Wpisz 'Start' aby rozpocząć..." onkeydown="if(event.key==='Enter')sendChat()">
+                    <button class="chat-send" onclick="sendChat()">Wyślij</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// ============ BLOCK LIBRARY ============
+const blocks = {
+    R1: `ROZPOZNANIE KLINICZNE\n• Dziąsła zdrowe, brak stanu zapalnego\n• Dobra kontrola biofilmu bakteryjnego\n\nCEL PLANU HIGIENIZACYJNEGO\n• Utrzymanie zdrowia dziąseł i zębów\n• Profilaktyka próchnicy\n• Utrwalenie prawidłowych nawyków higienicznych`,
+    R2: `ROZPOZNANIE KLINICZNE\n• Stan zapalny dziąseł\n• Obecność biofilmu i kamienia nazębnego\n• Krwawienie podczas szczotkowania lub sondowania\n\nCEL PLANU HIGIENIZACYJNEGO\n• Redukcja stanu zapalnego dziąseł\n• Poprawa kontroli biofilmu bakteryjnego\n• Całkowite wyeliminowanie krwawienia\n• Ochrona przed rozwojem choroby przyzębia`,
+    R3: `ROZPOZNANIE KLINICZNE\n• Nadwrażliwość zębów na bodźce termiczne\n• Starcia zębów — ubytki niepróchnicowe\n• Możliwy bruksizm lub zbyt mocne szczotkowanie\n\nCEL PLANU HIGIENIZACYJNEGO\n• Wzmocnienie i remineralizacja szkliwa\n• Redukcja nadwrażliwości\n• Delikatna technika szczotkowania\n• Ochrona przed dalszymi starciami`,
+    R4: `ROZPOZNANIE KLINICZNE\n• Aktywna próchnica lub wysokie ryzyko próchnicy\n• Niewystarczająca kontrola biofilmu bakteryjnego\n\nCEL PLANU HIGIENIZACYJNEGO\n• Wzmocnienie szkliwa fluorami\n• Poprawa kontroli biofilmu\n• Redukcja ryzyka nowych ubytków\n• Wsparcie remineralizacji wczesnych zmian`,
+    R5: `ROZPOZNANIE KLINICZNE\n• Obfite złogi kamienia nazębnego\n• Podwyższone ryzyko stanu zapalnego dziąseł\n\nCEL PLANU HIGIENIZACYJNEGO\n• Spowolnienie tworzenia się nowego kamienia\n• Utrzymanie efektu higienizacji na dłużej\n• Ochrona dziąseł przed stanem zapalnym\n• Poprawa techniki czyszczenia przestrzeni międzyzębowych`,
+    R6: `ROZPOZNANIE KLINICZNE\n• Halitoza — nieprzyjemny zapach z jamy ustnej\n• Nadmiar bakterii beztlenowych na języku i w przestrzeniach międzyzębowych\n\nCEL PLANU HIGIENIZACYJNEGO\n• Redukcja bakterii w jamie ustnej\n• Regularne czyszczenie języka\n• Dokładne czyszczenie przestrzeni międzyzębowych\n• Poprawa świeżości oddechu i komfortu`,
+    F1: `Szczoteczka elektryczna soniczna: Oral-B iO 3 lub iO 6\nKońcówki: Gentle Care (ochrona dziąseł) + Interdental Clean (okolice przydziąsłowe)\nGdzie kupić: Rossmann, Hebe, Media Markt, apteki, online`,
+    F2: `Szczoteczka elektryczna rotacyjna: Oral-B seria Pro lub Vitality\nGdzie kupić: Rossmann, Hebe, Media Markt, apteki`,
+    F3: `Szczoteczka manualna: Oral-B Pro-Expert, Colgate lub Elmex (miękkie włosie)\nGdzie kupić: Rossmann, Hebe, apteki`,
+    F1p: `Szczoteczka elektryczna soniczna Oral-B iO 3 lub iO 6\nKońcówka: Gentle Care + Interdental Clean (przydziąsłowo)\nCzas szczotkowania: minimum 2 minuty`,
+    F2p: `Szczoteczka elektryczna rotacyjna Oral-B Pro lub Vitality\nTechnika: prowadź główkę ząb po zębie, delikatny docisk\nCzas szczotkowania: minimum 2 minuty`,
+    F3p: `Szczoteczka manualna (miękkie włosie)\nTechnika: okrężna, przy linii dziąseł, delikatny docisk\nCzas szczotkowania: minimum 2 minuty`,
+    G1: `Szczoteczki międzyzębowe: Elgydium 0,8 mm / 1,2 mm\nGdzie kupić: apteki, sklepy stomatologiczne, online`,
+    G2: `Nić dentystyczna: Oral-B Pro-Expert\nGdzie kupić: Rossmann, Hebe, apteki, online`,
+    G3: `Irygator: Oral-B Aquacare 4\nGdzie kupić: Media Markt, Rossmann (większe sklepy), apteki, online`,
+    G4: `Szczoteczki międzyzębowe: Elgydium 0,8 mm / 1,2 mm\nIrygator: Oral-B Aquacare 4\nGdzie kupić: Rossmann, Hebe, Media Markt, apteki, online`,
+    G1p: `Szczoteczki międzyzębowe Elgydium 0,8 mm lub 1,2 mm\nStosować codziennie wieczorem, przed szczotkowaniem zębów`,
+    G2p: `Nić dentystyczna Oral-B Pro-Expert\nStosować codziennie wieczorem, przed szczotkowaniem zębów`,
+    G3p: `Irygator Oral-B Aquacare 4\nStosować 2–3 razy w tygodniu, po szczotkowaniu\nSzczególnie: wzdłuż linii dziąseł i w przestrzeniach międzyzębowych`,
+    G4a: `Szczoteczki międzyzębowe Elgydium 0,8 mm lub 1,2 mm\nStosować codziennie wieczorem, przed szczotkowaniu zębów`,
+    H1: `Pasta z fluorkiem cyny: Oral-B Pro-Expert Advanced\nGdzie kupić: Rossmann, Hebe, apteki`,
+    H2: `Pasta poranna: Curasept Biosmalto (różowa) — hydroksyapatyt\nGdzie kupić: Superpharm, apteki stomatologiczne, online\n\nPasta wieczorna: Oral-B Pro-Expert Advanced — fluorek cyny\nGdzie kupić: Rossmann, Hebe, apteki`,
+    H3: `Pasta z hydroksyapatytem: Curasept Biosmalto (różowa)\nGdzie kupić: Superpharm, apteki stomatologiczne, online`,
+    H1p: `Pasta z fluorkiem cyny: Oral-B Pro-Expert Advanced\nStosowanie: po szczotkowaniu wieczornym — nie płukać wodą po nałożeniu`,
+    H2a: `Pasta z hydroksyapatytem: Curasept Biosmalto (różowa)\nStosowanie: rano po przebudzeniu, nie jeść przez 30 min`,
+    H2b: `Pasta z fluorkiem cyny: Oral-B Pro-Expert Advanced\nStosowanie: po szczotkowaniu wieczornym — nie płukać wodą po nałożeniu`,
+    H3p: `Pasta z hydroksyapatytem: Curasept Biosmalto (różowa)\nStosowanie: wieczorem po szczotkowaniu — nie płukać wodą po nałożeniu`,
+    I1: `Płyn do płukania: Alfa Scaling\nKiedy: raz dziennie wieczorem, przez 7 dni po higienizacji\nGdzie kupić: apteki, sklepy stomatologiczne online`,
+    I1p: `Płyn Alfa Scaling\nPłukać 30–60 sekund po szczotkowaniu wieczornym\nNie płukać wodą po użyciu, nie jeść przez 30 min\nStosować przez 7 dni po higienizacji`,
+    J1: `Skrobak do języka\nGdzie kupić: Rossmann, Hebe`,
+    J1p: `Oczyszczanie języka skrobakiem\nWykonać wieczorem, po szczotkowaniu zębów — przeciągnąć skrobak od nasady języka ku przodowi 3–5 razy`,
+    X1: `TWOJA NASTĘPNA WIZYTA: za 3 miesiące\n\nKrótszy odstęp pozwala na szybszą kontrolę stanu zapalnego, monitorowanie postępów higieny domowej i wczesne wykrycie ewentualnych problemów.\n\nPamiętaj: Zdrowy uśmiech to zdrowe dziąsła! 💪`,
+    X2: `TWOJA NASTĘPNA WIZYTA: za 6 miesięcy\n\nStandardowy odstęp zapewniający utrzymanie zdrowia dziąseł, profesjonalne usunięcie kamienia i osadów oraz aktualizację planu higieny domowej.\n\nPamiętaj: Zdrowy uśmiech to zdrowe dziąsła! 💪`,
+    X3: `TWOJA NASTĘPNA WIZYTA: za 12 miesięcy\n\nRoczny odstęp odpowiedni przy bardzo dobrym stanie higieny i braku aktywnych problemów. Nawet przy doskonałej higienie domowej coroczna wizyta jest niezbędna.\n\nPamiętaj: Zdrowy uśmiech to zdrowe dziąsła! 💪`,
+    Z1: `Mycie zębów może wydawać się proste. Jednak bez konkretnego, indywidualnego planu higienizacyjnego bardzo łatwo popełniać błędy nawet wtedy, gdy wydaje się, że robisz "wszystko dobrze".\n\nDlatego po dzisiejszej wizycie przygotowałam dla Ciebie spersonalizowany plan higieny jamy ustnej, dopasowany do Twoich aktualnych potrzeb.\n\nZNAJDZIESZ W NIM:\n• Jasne zalecenia krok po kroku\n• Konkretne produkty i narzędzia do higieny domowej\n• Wskazówki, które pomogą Ci skutecznie zadbać o zdrowe dziąsła i zęby\n\nCelem tego planu jest nie tylko poprawa Twojego stanu jamy ustnej, ale także budowanie świadomych nawyków, dzięki którym utrzymasz zdrowy uśmiech na długie lata nawet do SETKI.`,
+    Z2: `1. Myj zęby minimum 2 minuty\nNie szybciej, nie "na oko". Dokładne szczotkowanie usuwa biofilm bakteryjny — główną przyczynę próchnicy i chorób dziąseł.\n\n2. Szczotkuj delikatnie, ale dokładnie\nBez szorowania, bez nadmiernego docisku. Technika i systematyczność są ważniejsze niż siła.\n\n3. Używaj pasty z fluorem\nWzmacnia szkliwo, wspiera remineralizację, kontroluje bakterie. Unikaj past mocno ściernych i zawierających SLS.\n\n4. Codziennie czyść przestrzenie międzyzębowe\nTo tam najczęściej rozwija się próchnica i zapalenie dziąseł. Szczoteczki międzyzębowe lub nić — każdego dnia, najlepiej wieczorem.\n\n5. Czyść język\nNa języku gromadzi się ogromna ilość bakterii. Regularne czyszczenie poprawia świeżość oddechu i wspiera zdrowie dziąseł.\n\n6. Reaguj na krwawienie dziąseł\nKrwawienie to nie norma — to sygnał ostrzegawczy. Wczesne wdrożenie prawidłowej higieny pozwala cofnąć stan zapalny.\n\n7. Myj zęby w odpowiednim czasie\nPo posiłkach szczególnie kwaśnych odczekaj około 30 minut. Chronisz szkliwo przed uszkodzeniem.\n\n8. Traktuj płyn do płukania jako uzupełnienie — unikaj tych z alkoholem\nPłyn nie zastępuje szczotkowania ani czyszczenia przestrzeni międzyzębowych.\n\n9. Zmieniaj nawyki, nie tylko produkty\nNajlepsze szczoteczki i pasty nie zadziałają, jeśli myjesz zęby za krótko lub pomijasz przestrzenie międzyzębowe. Skuteczna higiena to powtarzalność i konsekwencja.\n\n10. Korzystaj z indywidualnego instruktażu i planu higieny\nBudujesz świadomość, zwiększasz zaangażowanie w profilaktykę i zapobiegasz chorobom dziąseł i przyzębia.\n\n11. Wykonuj regularne przeglądy i higienizację co 6 miesięcy\nWiele problemów rozwija się bez bólu i objawów. Regularna higienizacja pozwala wcześnie wykryć problemy i zapobiega kosztownemu leczeniu.\n\n12. Wykonuj raz do roku badania kontrolne\nZdrowie jamy ustnej i całego organizmu są ze sobą ściśle powiązane. Morfologia, żelazo, witamina D, glukoza — regularne badania pomagają lepiej kontrolować stany zapalne.\n\n13. Dbaj o dietę i korzystaj z opieki dietetyka klinicznego\nOgranicz cukry proste i częste podjadanie, unikaj wysoko przetworzonych produktów. Wsparcie dietetyka pomaga zmniejszyć stan zapalny i wspierać efekty leczenia stomatologicznego.`,
+    Z3: `MASZ PYTANIA?\n\nJeśli zauważysz niepokojące objawy (krwawienie, ból, nadwrażliwość) — skontaktuj się z gabinetem. Nie czekaj do następnej wizyty.\n\nZapraszam na mój Instagram po więcej wskazówek dotyczących zdrowia jamy ustnej.\n[Tu higienistka wpisuje swój Instagram lub inne dane kontaktowe]`,
+    Z4: `Cel: usunięcie nocnego biofilmu bakteryjnego i ochrona zębów na cały dzień. Pamiętaj: zęby myjemy po przebudzeniu, ze śniadaniem czekamy 30 min.`,
+    Z5: `Cel: dokładna kontrola biofilmu bakteryjnego, wsparcie wygaszania stanu zapalnego i ochrona zębów oraz dziąseł w nocy.`
+};
+
+// ============ QUESTIONS ============
+const questions = [
+    { id: 'P1', title: 'Pytanie 1 z 7', question: 'Jaki jest główny problem pacjenta?', options: [
+        { letter: 'a', text: 'Zdrowe dziąsła', value: 'R1' },
+        { letter: 'b', text: 'Zapalenie dziąseł', value: 'R2' },
+        { letter: 'c', text: 'Nadwrażliwość / starcia zębów', value: 'R3' },
+        { letter: 'd', text: 'Próchnica aktywna', value: 'R4' },
+        { letter: 'e', text: 'Kamień nazębny', value: 'R5' },
+        { letter: 'f', text: 'Halitoza', value: 'R6' }
+    ]},
+    { id: 'P2', title: 'Pytanie 2 z 7', question: 'Jakie narzędzie główne?', options: [
+        { letter: 'a', text: 'Szczoteczka soniczna', value: 'F1' },
+        { letter: 'b', text: 'Szczoteczka rotacyjna', value: 'F2' },
+        { letter: 'c', text: 'Szczoteczka manualna', value: 'F3' }
+    ]},
+    { id: 'P3', title: 'Pytanie 3 z 7', question: 'Czyszczenie przestrzeni międzyzębowych?', options: [
+        { letter: 'a', text: 'Szczoteczki międzyzębowe', value: 'G1' },
+        { letter: 'b', text: 'Nić dentystyczna', value: 'G2' },
+        { letter: 'c', text: 'Irygator', value: 'G3' },
+        { letter: 'd', text: 'Szczoteczki + irygator', value: 'G4' }
+    ]},
+    { id: 'P4', title: 'Pytanie 4 z 7', question: 'Jaka pasta?', options: [
+        { letter: 'a', text: 'Fluor', value: 'H1' },
+        { letter: 'b', text: 'Hydroksyapatyt rano + fluor wieczór', value: 'H2' },
+        { letter: 'c', text: 'Hydroksyapatyt', value: 'H3' }
+    ]},
+    { id: 'P5', title: 'Pytanie 5 z 7', question: 'Płyn do płukania?', options: [
+        { letter: 'a', text: 'Tak', value: 'I1' },
+        { letter: 'b', text: 'Nie', value: null }
+    ]},
+    { id: 'P6', title: 'Pytanie 6 z 7', question: 'Skrobak do języka?', options: [
+        { letter: 'a', text: 'Tak', value: 'J1' },
+        { letter: 'b', text: 'Nie', value: null }
+    ]},
+    { id: 'P7', title: 'Pytanie 7 z 7', question: 'Następna wizyta?', options: [
+        { letter: 'a', text: 'Za 3 miesiące', value: 'X1' },
+        { letter: 'b', text: 'Za 6 miesięcy', value: 'X2' },
+        { letter: 'c', text: 'Za 12 miesięcy', value: 'X3' }
+    ]}
+];
+
+let currentQ = 0;
+let answers = {};
+
+function renderQuestion() {
+    const q = questions[currentQ];
+    const pct = ((currentQ + 1) / 7 * 100).toFixed(1);
+    document.getElementById('progress-text').textContent = q.title;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    
+    let html = `<div class="question-card"><h3>${q.title}</h3><p>${q.question}</p>`;
+    q.options.forEach(o => {
+        html += `<button class="option" onclick="selectOption('${q.id}','${o.value}',this)">${o.letter}) ${o.text}</button>`;
+    });
+    html += `</div>`;
+    document.getElementById('question-container').innerHTML = html;
+}
+
+function selectOption(qId, value, btn) {
+    answers[qId] = value === 'null' ? null : value;
+    document.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    
+    setTimeout(() => {
+        if (currentQ < 6) {
+            currentQ++;
+            renderQuestion();
+        } else {
+            generatePlan();
+        }
+    }, 300);
+}
+
+function nl2br(text) {
+    return text.replace(/\n/g, '<br>');
+}
+
+function generatePlan() {
+    document.getElementById('questions-section').classList.add('hidden');
+    document.getElementById('plan-section').classList.remove('hidden');
+    
+    const a = answers;
+    let html = '';
+    
+    // Z1 - Wstęp
+    html += `<h2>📋 Indywidualny Plan Higieny Jamy Ustnej</h2>`;
+    html += `<p>${nl2br(blocks.Z1)}</p>`;
+    
+    // Rozpoznanie
+    html += `<h2>🔍 Rozpoznanie i Cel</h2>`;
+    html += `<p>${nl2br(blocks[a.P1])}</p>`;
+    
+    // Lista zakupów
+    html += `<h2>🛍️ Lista Zakupów — Co Potrzebujesz</h2>`;
+    const shopItems = [];
+    const brushKey = a.P2; // F1, F2, F3
+    shopItems.push(blocks[brushKey]);
+    const interKey = a.P3; // G1, G2, G3, G4
+    shopItems.push(blocks[interKey]);
+    const pasteKey = a.P4; // H1, H2, H3
+    shopItems.push(blocks[pasteKey]);
+    if (a.P5) shopItems.push(blocks[a.P5]);
+    if (a.P6) shopItems.push(blocks[a.P6]);
+    shopItems.forEach(item => {
+        html += `<div class="shopping-item">${nl2br(item)}</div>`;
+    });
+    
+    // Plan poranny
+    html += `<h2>☀️ Higiena Poranna</h2>`;
+    html += `<p>${nl2br(blocks.Z4)}</p>`;
+    let morningStep = 1;
+    html += `<div class="step"><span class="step-num">Krok ${morningStep} — Szczotkowanie</span>${nl2br(blocks[brushKey + 'p'])}</div>`;
+    morningStep++;
+    if (a.P4 === 'H2' || a.P4 === 'H3') {
+        html += `<div class="step"><span class="step-num">Krok ${morningStep} — Pasta poranna</span>${nl2br(blocks.H2a)}</div>`;
+    }
+    
+    // Plan wieczorny
+    html += `<h2>🌙 Higiena Wieczorna</h2>`;
+    html += `<p>${nl2br(blocks.Z5)}</p>`;
+    let step = 1;
+    
+    // Przestrzenie międzyzębowe
+    if (a.P3 === 'G1') {
+        html += `<div class="step"><span class="step-num">Krok ${step} — Czyszczenie przestrzeni międzyzębowych</span>${nl2br(blocks.G1p)}</div>`;
+        step++;
+    } else if (a.P3 === 'G2') {
+        html += `<div class="step"><span class="step-num">Krok ${step} — Czyszczenie przestrzeni międzyzębowych</span>${nl2br(blocks.G2p)}</div>`;
+        step++;
+    } else if (a.P3 === 'G4') {
+        html += `<div class="step"><span class="step-num">Krok ${step} — Czyszczenie przestrzeni międzyzębowych</span>${nl2br(blocks.G4a)}</div>`;
+        step++;
+    }
+    // G3 (irygator only) - no interdental brushes step, irrigator comes later
+    
+    // Szczotkowanie
+    html += `<div class="step"><span class="step-num">Krok ${step} — Szczotkowanie zębów</span>${nl2br(blocks[brushKey + 'p'])}</div>`;
+    step++;
+    
+    // Skrobak
+    if (a.P6) {
+        html += `<div class="step"><span class="step-num">Krok ${step} — Higiena języka</span>${nl2br(blocks.J1p)}</div>`;
+        step++;
+    }
+    
+    // Irygator (G3 or G4)
+    if (a.P3 === 'G3' || a.P3 === 'G4') {
+        html += `<div class="step"><span class="step-num">Krok ${step} — Irygacja jamy ustnej</span>${nl2br(blocks.G3p)}</div>`;
+        step++;
+    }
+    
+    // Płyn
+    if (a.P5) {
+        html += `<div class="step"><span class="step-num">Krok ${step} — Płukanie płynem</span>${nl2br(blocks.I1p)}</div>`;
+        step++;
+    }
+    
+    // Pasta wieczorna
+    let eveningPasteBlock;
+    if (a.P4 === 'H1') eveningPasteBlock = 'H1p';
+    else if (a.P4 === 'H2') eveningPasteBlock = 'H2b';
+    else eveningPasteBlock = 'H3p';
+    html += `<div class="step"><span class="step-num">Krok ${step} — Pasta wieczorna</span>${nl2br(blocks[eveningPasteBlock])}</div>`;
+    
+    // 13 Zasad
+    html += `<h2>📖 13 Zasad Higieny Jamy Ustnej</h2>`;
+    const zasady = blocks.Z2.split(/\n\n(?=\d+\.)/);
+    zasady.forEach(z => {
+        html += `<div class="zasada">${nl2br(z)}</div>`;
+    });
+    
+    // Wizyta
+    html += `<h2>📅 Następna Wizyta</h2>`;
+    html += `<p>${nl2br(blocks[a.P7])}</p>`;
+    
+    // Kontakt
+    html += `<h2>📞 Kontakt</h2>`;
+    html += `<p>Kontakt do kliniki: [DO UZUPEŁNIENIA]</p>`;
+    html += `<p>${nl2br(blocks.Z3)}</p>`;
+    
+    document.getElementById('plan-output').innerHTML = html;
+}
+
+function resetPlanner() {
+    currentQ = 0;
+    answers = {};
+    document.getElementById('questions-section').classList.remove('hidden');
+    document.getElementById('plan-section').classList.add('hidden');
+    renderQuestion();
+}
+
+// ============ TABS ============
+function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-planner').classList.add('hidden');
+    document.getElementById('tab-chat').classList.add('hidden');
+    
+    if (tab === 'planner') {
+        document.getElementById('tab-planner').classList.remove('hidden');
+        document.querySelectorAll('.tab')[0].classList.add('active');
+    } else {
+        document.getElementById('tab-chat').classList.remove('hidden');
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        if (!chatInited) initChat();
+    }
+}
+
+// ============ LIVE CHAT ============
+let chatHistory = [];
+let chatInited = false;
+
+const SYSTEM_PROMPT = `Jesteś asystentem polskiej higienistki stomatologicznej.
+Twoje zadanie: zadać 7 pytań, a następnie złożyć gotowy plan higieny z bloków biblioteki.
+Pracujesz WYŁĄCZNIE na poniższej bibliotece bloków. Nie wymyślasz żadnych treści — kopiujesz dosłownie teksty.
+
+RODO: Jeśli higienistka wpisze imię, nazwisko, konkretny wiek, datę, numer zęba lub opis kliniczny — PRZERWIJ i napisz:
+"Proszę podać tylko literę odpowiedzi (a, b, c…) — bez danych osobowych pacjenta."
+
+Gdy higienistka wpisze cokolwiek — odpowiedz: "Zaczynamy. Odpowiadaj tylko literami — bez imion, dat i opisów klinicznych." i zadaj Pytanie 1.
+
+SEKWENCJA PYTAŃ:
+P1 — Problem główny: a) Zdrowe dziąsła b) Zapalenie dziąseł c) Nadwrażliwość/starcia d) Próchnica aktywna e) Kamień nazębny f) Halitoza
+P2 — Narzędzie: a) Soniczna b) Rotacyjna c) Manualna
+P3 — Międzyzębowe: a) Szczoteczki b) Nić c) Irygator d) Szczoteczki+irygator
+P4 — Pasta: a) Fluor b) Hydroksy rano+fluor wieczór c) Hydroksyapatyt
+P5 — Płyn: a) Tak b) Nie
+P6 — Skrobak: a) Tak b) Nie
+P7 — Wizyta: a) 3 mies b) 6 mies c) 12 mies
+
+Po 7 odpowiedziach złóż plan. Nie wyświetlaj kodów bloków. Plan dla pacjenta.`;
+
+function initChat() {
+    chatInited = true;
+    chatHistory = [{ role: 'system', content: SYSTEM_PROMPT }];
+    addChatMsg('bot', 'Cześć! Jestem asystentem higienistki stomatologicznej. Wpisz "Start" aby rozpocząć tworzenie planu higieny dla pacjenta. 🦷');
+}
+
+function addChatMsg(who, text) {
+    const div = document.getElementById('chat-messages');
+    div.innerHTML += `<div class="chat-msg ${who}"><div class="bubble">${text.replace(/\n/g,'<br>')}</div></div>`;
+    div.scrollTop = div.scrollHeight;
+}
+
+async function sendChat() {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    
+    addChatMsg('user', msg);
+    chatHistory.push({ role: 'user', content: msg });
+    
+    const apiUrl = document.getElementById('api-url').value;
+    
+    try {
+        addChatMsg('bot', '⏳ Myślę...');
+        const resp = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer sk-spark-litellm-2026'
+            },
+            body: JSON.stringify({
+                model: 'gpt-oss',
+                messages: chatHistory,
+                temperature: 0.3,
+                max_tokens: 4000
+            })
+        });
+        
+        // Remove "thinking" message
+        const msgs = document.getElementById('chat-messages');
+        msgs.removeChild(msgs.lastChild);
+        
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        const reply = data.choices[0].message.content;
+        
+        chatHistory.push({ role: 'assistant', content: reply });
+        addChatMsg('bot', reply);
+    } catch (e) {
+        const msgs = document.getElementById('chat-messages');
+        msgs.removeChild(msgs.lastChild);
+        addChatMsg('bot', `❌ Błąd połączenia: ${e.message}\n\nSprawdź czy:\n• Jesteś w sieci lokalnej\n• LiteLLM działa na Sparku (192.168.1.80:4000)\n• Adres API jest poprawny`);
+    }
+}
+
+async function testApi() {
+    const apiUrl = document.getElementById('api-url').value.replace('/chat/completions', '/models');
+    try {
+        const resp = await fetch(apiUrl, { headers: { 'Authorization': 'Bearer sk-spark-litellm-2026' }});
+        if (resp.ok) alert('✅ Połączenie OK!');
+        else alert(`❌ Błąd: HTTP ${resp.status}`);
+    } catch(e) {
+        alert(`❌ Nie mogę się połączyć: ${e.message}`);
+    }
+}
+
+// Init
+renderQuestion();
+</script>
+</body>
+</html>
