@@ -792,20 +792,16 @@
                 // Submit to Google Apps Script
                 const response = await fetch('https://script.google.com/macros/s/AKfycbxT5CnntUai5AunMpe7lkl1XwncU5cuTlFnLqnDi3C17faReG7qcT30A6QndIwjOyGa/exec', {
                     method: 'POST',
+                    mode: 'no-cors',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'text/plain',
                     },
                     body: JSON.stringify(formData)
                 });
                 
-                const result = await response.json();
-                
-                if (result.result === 'success') {
-                    showStatus('success', 'Dziękujemy! Twoje dane zostały zapisane.');
-                    form.reset();
-                } else {
-                    throw new Error(result.message || 'Wystąpił błąd podczas wysyłania.');
-                }
+                // no-cors returns opaque response, assume success if no network error
+                showStatus('success', '🎉 Dziękujemy! Zostałeś zapisany na listę.');
+                form.reset();
                 
             } catch (error) {
                 console.error('Form submission error:', error);
