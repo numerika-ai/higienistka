@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Layout - System Tworzenia Spersonalizowanych Planów Higienicznych z AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables - Design System */
+        :root {
+            --color-pink-background: #FDEFF2;
+            --color-pink-card: #FADDE4;
+            --color-text-dark: #211F1F;
+            --color-text-module: #6F4E53;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lora', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        /* A4 Portrait Container */
+        .page-container {
+            width: 794px;
+            height: 1123px;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background-color: var(--color-pink-background);
+        }
+
+        .grid-page {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 6% 8%;
+        }
+
+        /* Header Section */
+        .header-section {
+            height: 14%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4%;
+        }
+
+        .main-title {
+            font-family: var(--font-heading);
+            font-size: 78px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            line-height: 0.9;
+            text-align: center;
+            color: transparent;
+            -webkit-text-stroke: 2px var(--color-text-dark);
+            text-stroke: 2px var(--color-text-dark);
+        }
+
+        /* Main Grid */
+        .content-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2% 4%;
+        }
+
+        .module {
+            background-color: var(--color-pink-card);
+            border-radius: 50% 50% 0 0;
+            display: flex;
+            flex-direction: column;
+            padding: 5%;
+            position: relative;
+        }
+
+        .module-image-first {
+            align-items: center;
+        }
+
+        .module-text-first {
+            align-items: center;
+            flex-direction: column-reverse;
+        }
+
+        .module-image {
+            width: 45%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(111, 78, 83, 0.3);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5% 0;
+        }
+
+        .image1 {
+            background: linear-gradient(135deg, #F5E6D3 0%, #E8D5C4 100%);
+        }
+
+        .image2 {
+            background: linear-gradient(135deg, #F0E6DA 0%, #DEB887 100%);
+        }
+
+        .image3 {
+            background: linear-gradient(135deg, #E6E6FA 0%, #D8BFD8 100%);
+        }
+
+        .image4 {
+            background: linear-gradient(135deg, #F0FFF0 0%, #98FB98 100%);
+        }
+
+        .module-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .module-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--color-text-module);
+            margin-bottom: 15px;
+        }
+
+        .module-text {
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.5;
+            color: var(--color-text-module);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="grid-page">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1 class="main-title">
+                    NARZĘDZIA<br>
+                    PRACY
+                </h1>
+            </div>
+            
+            <!-- Main Grid -->
+            <div class="content-grid">
+                <!-- Top Left Module - Image First -->
+                <div class="module module-image-first">
+                    <div class="module-image image1">Instrumenty</div>
+                    <div class="module-content">
+                        <h3 class="module-title">SKALER ULTRADŹWIĘKOWY</h3>
+                        <p class="module-text">
+                            Precyzyjna głowica ultradźwiękowa umożliwia skuteczne usuwanie złogów nazębnych przy minimalnym dyskomforcie pacjenta dzięki kontrolowanej amplitudzie drgań.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Top Right Module - Image First -->
+                <div class="module module-image-first">
+                    <div class="module-image image2">System AI</div>
+                    <div class="module-content">
+                        <h3 class="module-title">ANALIZA OBRAZU</h3>
+                        <p class="module-text">
+                            Zaawansowane algorytmy rozpoznawania obrazu automatycznie identyfikują obszary wymagające interwencji oraz monitorują postępy leczenia.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Bottom Left Module - Text First -->
+                <div class="module module-text-first">
+                    <div class="module-content">
+                        <h3 class="module-title">DOKUMENTACJA CYFROWA</h3>
+                        <p class="module-text">
+                            Elektroniczna karta pacjenta integruje wszystkie dane kliniczne z automatycznym generowaniem raportów oraz planów leczenia dostosowanych indywidualnie.
+                        </p>
+                    </div>
+                    <div class="module-image image3">E-dokumenty</div>
+                </div>
+                
+                <!-- Bottom Right Module - Text First -->
+                <div class="module module-text-first">
+                    <div class="module-content">
+                        <h3 class="module-title">EDUKACJA PACJENTA</h3>
+                        <p class="module-text">
+                            Interaktywne materiały edukacyjne oraz wizualizacje 3D pomagają pacjentom zrozumieć konieczność przestrzegania zaleceń higienicznych w domu.
+                        </p>
+                    </div>
+                    <div class="module-image image4">Materiały</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

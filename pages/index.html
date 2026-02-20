@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Tworzenia Spersonalizowanych Planów Higienicznych z AI - Page Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables - Design System */
+        :root {
+            --color-pink-primary: #FFD9E5;
+            --color-grey-light: #EAEAEA;
+            --color-text-dark: #231F20;
+            --color-white: #FFFFFF;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lora', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            background-color: var(--color-grey-light);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: var(--color-pink-primary);
+            border-radius: 10px;
+        }
+
+        .main-title {
+            font-family: var(--font-heading);
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--color-text-dark);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-family: var(--font-body);
+            font-size: 18px;
+            font-weight: 300;
+            color: var(--color-text-dark);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .page-card {
+            background: var(--color-white);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .page-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .page-number {
+            font-family: var(--font-heading);
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--color-pink-primary);
+            margin-bottom: 10px;
+            text-stroke: 2px var(--color-text-dark);
+            -webkit-text-stroke: 2px var(--color-text-dark);
+            color: transparent;
+        }
+
+        .page-title {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-text-dark);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .page-description {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--color-text-dark);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .page-link {
+            display: inline-block;
+            background: var(--color-pink-primary);
+            color: var(--color-text-dark);
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-family: var(--font-body);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .page-link:hover {
+            background: var(--color-text-dark);
+            color: var(--color-white);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--color-pink-primary);
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--color-text-dark);
+        }
+
+        @media (max-width: 768px) {
+            .page-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .main-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="main-title">System Tworzenia Spersonalizowanych Planów Higienicznych z AI</h1>
+            <p class="subtitle">Galeria Stron Szablonu</p>
+        </header>
+
+        <main class="page-grid">
+            <div class="page-card">
+                <div class="page-number">01</div>
+                <h3 class="page-title">Okładka</h3>
+                <p class="page-description">
+                    Strona tytułowa z fotografią autorki, głównym tytułem i podtytułem w eleganckim układzie pionowym.
+                </p>
+                <a href="page_01_cover.html" class="page-link">Zobacz Stronę</a>
+            </div>
+
+            <div class="page-card">
+                <div class="page-number">02</div>
+                <h3 class="page-title">O Autorce</h3>
+                <p class="page-description">
+                    Strona biograficzna z portretem autorki, rozbudowanym tekstem i eleganckim tytułem konturowym.
+                </p>
+                <a href="page_02_about.html" class="page-link">Zobacz Stronę</a>
+            </div>
+
+            <div class="page-card">
+                <div class="page-number">03</div>
+                <h3 class="page-title">Rozdział</h3>
+                <p class="page-description">
+                    Strona rozdziału z układem 2x2 grid, zawierająca podstawowe informacje o higienie stomatologicznej.
+                </p>
+                <a href="page_03_chapter.html" class="page-link">Zobacz Stronę</a>
+            </div>
+
+            <div class="page-card">
+                <div class="page-number">04</div>
+                <h3 class="page-title">Rozdział 2</h3>
+                <p class="page-description">
+                    Kontynuacja treści rozdziału z informacjami o zastosowaniu AI w praktyce higienisty.
+                </p>
+                <a href="page_04_chapter2.html" class="page-link">Zobacz Stronę</a>
+            </div>
+
+            <div class="page-card">
+                <div class="page-number">05</div>
+                <h3 class="page-title">Przegroda</h3>
+                <p class="page-description">
+                    Pełnostronicowa grafika z nakładkami tekstowymi na półprzezroczystych prostokątach.
+                </p>
+                <a href="page_05_divider.html" class="page-link">Zobacz Stronę</a>
+            </div>
+
+            <div class="page-card">
+                <div class="page-number">06</div>
+                <h3 class="page-title">Treść ze Zdjęciami</h3>
+                <p class="page-description">
+                    Strona z okrągłymi zdjęciami, statystykami i kolorowymi blokami nagłówkowymi.
+                </p>
+                <a href="page_06_content_images.html" class="page-link">Zobacz Stronę</a>
+            </div>
+
+            <div class="page-card">
+                <div class="page-number">07</div>
+                <h3 class="page-title">Siatka 2x2</h3>
+                <p class="page-description">
+                    Lustrzany układ kartek z zaokrąglonymi górami - górne z obrazkiem na początku, dolne na końcu.
+                </p>
+                <a href="page_07_grid.html" class="page-link">Zobacz Stronę</a>
+            </div>
+
+            <div class="page-card">
+                <div class="page-number">08</div>
+                <h3 class="page-title">Opinie</h3>
+                <p class="page-description">
+                    Strona z cytatem pacjenta, łukowym obrazem i układem dwukolumnowym z informacjami o autorce.
+                </p>
+                <a href="page_08_testimonial.html" class="page-link">Zobacz Stronę</a>
+            </div>
+
+            <div class="page-card">
+                <div class="page-number">09</div>
+                <h3 class="page-title">Treść z Bio</h3>
+                <p class="page-description">
+                    Strona z treścią merytoryczną i stopką biograficzną z okrągłym zdjęciem autorki.
+                </p>
+                <a href="page_09_content_bio.html" class="page-link">Zobacz Stronę</a>
+            </div>
+
+            <div class="page-card">
+                <div class="page-number">10</div>
+                <h3 class="page-title">Portret Autorki</h3>
+                <p class="page-description">
+                    Pełnostronicowy portret autorki na różowym tle - idealna strona końcowa e-booka.
+                </p>
+                <a href="page_10_author_photo.html" class="page-link">Zobacz Stronę</a>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>
+                <strong>System Tworzenia Spersonalizowanych Planów Higienicznych z AI</strong><br>
+                Kompletny przewodnik krok po kroku dla nowoczesnej higienistki stomatologicznej<br>
+                Dominika Zrobek © 2026
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

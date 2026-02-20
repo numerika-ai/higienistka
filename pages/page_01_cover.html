@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover - System Tworzenia Spersonalizowanych Planów Higienicznych z AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables - Design System */
+        :root {
+            --color-pink-primary: #FFD9E5;
+            --color-grey-light: #EAEAEA;
+            --color-text-dark: #231F20;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lora', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        /* A4 Portrait Container */
+        .page-container {
+            width: 794px;
+            height: 1123px;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .cover-page {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Top Section - Pink background with image */
+        .top-section {
+            height: 57%;
+            background-color: var(--color-pink-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+        }
+
+        /* Author photo placeholder */
+        .author-photo {
+            width: 85%;
+            height: 81%;
+            margin-top: 2%;
+            background: linear-gradient(135deg, #F4C2C2 0%, #FFE4E1 50%, #FADADD 100%);
+            border-radius: 50% 50% 0 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(35, 31, 32, 0.3);
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .author-name {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-heading);
+            font-size: 17px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--color-text-dark);
+            text-align: center;
+        }
+
+        /* Middle Section - Grey background with main title */
+        .middle-section {
+            height: 25%;
+            background-color: var(--color-grey-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .main-title {
+            font-family: var(--font-heading);
+            font-size: 67px;
+            font-weight: 900;
+            line-height: 0.95;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .main-title .line1,
+        .main-title .line3,
+        .main-title .line4 {
+            color: var(--color-text-dark);
+        }
+
+        .main-title .line2 {
+            color: var(--color-pink-primary);
+        }
+
+        /* Bottom Section - Pink background with subtitle */
+        .bottom-section {
+            height: 18%;
+            background-color: var(--color-pink-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .subtitle {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            font-weight: 400;
+            line-height: 1.4;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 3px;
+            color: var(--color-text-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="cover-page">
+            <!-- Top Section with photo and author name -->
+            <div class="top-section">
+                <div class="author-photo">
+                    Dominika Zrobek
+                </div>
+                <div class="author-name">DOMINIKA ZROBEK</div>
+            </div>
+            
+            <!-- Middle Section with main title -->
+            <div class="middle-section">
+                <div class="main-title">
+                    <div class="line1">SYSTEM TWORZENIA</div>
+                    <div class="line2">SPERSONALIZOWANYCH</div>
+                    <div class="line3">PLANÓW HIGIENICZNYCH</div>
+                    <div class="line4">Z AI</div>
+                </div>
+            </div>
+            
+            <!-- Bottom Section with subtitle -->
+            <div class="bottom-section">
+                <div class="subtitle">
+                    KOMPLETNY PRZEWODNIK KROK PO KROKU<br>
+                    DLA NOWOCZESNEJ HIGIENISTKI STOMATOLOGICZNEJ
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

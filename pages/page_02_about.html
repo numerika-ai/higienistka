@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - System Tworzenia Spersonalizowanych Planów Higienicznych z AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables - Design System */
+        :root {
+            --color-pink-primary: #FFD9E5;
+            --color-pink-light: #FEEFF2;
+            --color-grey-light: #EAEAEA;
+            --color-text-dark: #231F20;
+            --color-black: #000000;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lora', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        /* A4 Portrait Container */
+        .page-container {
+            width: 794px;
+            height: 1123px;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background-color: var(--color-pink-light);
+        }
+
+        .about-page {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header with outline title */
+        .header-section {
+            height: 13%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 8%;
+        }
+
+        .outline-title {
+            font-family: var(--font-heading);
+            font-size: 135px;
+            font-weight: 400;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: transparent;
+            -webkit-text-stroke: 2px var(--color-black);
+            text-stroke: 2px var(--color-black);
+        }
+
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+
+        /* Left column - Image */
+        .image-column {
+            width: 45%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .author-image {
+            width: 100%;
+            height: 65%;
+            background: linear-gradient(135deg, #E8DBCF 0%, #F0E6DA 50%, #C6A38D 100%);
+            border-radius: 0 20px 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(35, 31, 32, 0.3);
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Right column - Text */
+        .text-column {
+            width: 42%;
+            margin-left: 5%;
+            margin-top: 5%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .body-text {
+            font-family: var(--font-heading);
+            font-size: 17px;
+            font-weight: 300;
+            line-height: 2.0;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--color-black);
+            text-align: left;
+        }
+
+        .drop-cap {
+            float: left;
+            font-family: var(--font-heading);
+            font-size: 67px;
+            font-weight: 400;
+            line-height: 1;
+            margin-right: 8px;
+            margin-top: -5px;
+            color: var(--color-black);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="about-page">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1 class="outline-title">ABOUT</h1>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Left Column - Image -->
+                <div class="image-column">
+                    <div class="author-image">
+                        Portrait Photo
+                    </div>
+                </div>
+                
+                <!-- Right Column - Text -->
+                <div class="text-column">
+                    <p class="body-text">
+                        <span class="drop-cap">L</span>OREM IPSUM DOLOR SIT<br>
+                        AMET, CONSECTETUR<br>
+                        ADIPISCING ELIT, SED DO<br>
+                        EIUSMOD TEMPOR<br>
+                        INCIDIDUNT UT LABORE<br>
+                        ET DOLORE MAGNA<br>
+                        ALIQUA. UT ENIM AD<br>
+                        MINIM VENIAM, QUIS<br>
+                        NOSTRUD EXERCITATION<br>
+                        ULLAMCO LABORIS NISI<br>
+                        UT ALIQUIP EX EA<br>
+                        COMMODO CONSEQUAT.<br>
+                        DUIS AUTE IRURE DOLOR<br>
+                        IN REPREHENDERIT IN<br>
+                        VOLUPTATE VELIT ESSE<br>
+                        CILLUM DOLORE EU<br>
+                        FUGIAT NULLA PARIATUR.<br>
+                        EXCEPTEUR SINT<br>
+                        OCCAECAT CUPIDATAT<br>
+                        NON PROIDENT, SUNT IN<br>
+                        CULPA QUI OFFICIA<br>
+                        DESERUNT MOLLIT ANIM<br>
+                        ID EST LABORUM.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

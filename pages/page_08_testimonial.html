@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimonial - System Tworzenia Spersonalizowanych Planów Higienicznych z AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables - Design System */
+        :root {
+            --color-pink-background: #F8E4E7;
+            --color-grey-block: #EAE3E1;
+            --color-text-dark: #2D2D2D;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lora', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        /* A4 Portrait Container */
+        .page-container {
+            width: 794px;
+            height: 1123px;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background-color: var(--color-pink-background);
+        }
+
+        .testimonial-page {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            padding: 5%;
+            gap: 4%;
+        }
+
+        /* Left Column */
+        .left-column {
+            width: 43%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-title {
+            font-family: var(--font-heading);
+            font-size: 78px;
+            font-weight: 100;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            line-height: 1.0;
+            color: var(--color-text-dark);
+            margin-bottom: 8%;
+        }
+
+        .arch-image {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(180deg, #E5C9CD 0%, #F0E6DA 100%);
+            border-radius: 50% 50% 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(45, 45, 45, 0.3);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5%;
+        }
+
+        .bottom-block {
+            background-color: var(--color-grey-block);
+            padding: 8%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .name-section {
+            margin-bottom: 20px;
+        }
+
+        .line {
+            width: 60%;
+            height: 1px;
+            background-color: var(--color-text-dark);
+            margin: 10px auto;
+        }
+
+        .name-title {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: var(--color-text-dark);
+        }
+
+        .bio-text {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            line-height: 1.8;
+            color: var(--color-text-dark);
+        }
+
+        /* Right Column */
+        .right-column {
+            width: 53%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-logo {
+            text-align: center;
+            margin-bottom: 5%;
+        }
+
+        .curved-text {
+            font-family: var(--font-body);
+            font-size: 17px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            color: var(--color-text-dark);
+        }
+
+        .company-name {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--color-text-dark);
+            margin-top: 5px;
+        }
+
+        .quote-block {
+            position: relative;
+            margin-bottom: 8%;
+        }
+
+        .quote-mark {
+            font-family: var(--font-heading);
+            font-size: 45px;
+            color: var(--color-text-dark);
+            position: absolute;
+        }
+
+        .quote-mark.open {
+            top: -15px;
+            left: -15px;
+        }
+
+        .quote-mark.close {
+            bottom: -15px;
+            right: -15px;
+        }
+
+        .quote-text {
+            font-family: var(--font-body);
+            font-size: 17px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            line-height: 1.8;
+            color: var(--color-text-dark);
+            text-align: justify;
+        }
+
+        .section-subtitle {
+            font-family: var(--font-heading);
+            font-size: 34px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--color-text-dark);
+            margin-bottom: 3%;
+        }
+
+        .body-content {
+            font-family: var(--font-body);
+            font-size: 17px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            line-height: 1.8;
+            color: var(--color-text-dark);
+            text-align: justify;
+        }
+
+        .body-content p {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="testimonial-page">
+            <!-- Left Column -->
+            <div class="left-column">
+                <h1 class="main-title">
+                    OPINIE<br>
+                    PACJENTÓW
+                </h1>
+                
+                <div class="arch-image">
+                    Zdjęcie gabinetu
+                </div>
+                
+                <div class="bottom-block">
+                    <div class="name-section">
+                        <div class="line"></div>
+                        <h3 class="name-title">ANNA KOWALSKA</h3>
+                        <div class="line"></div>
+                    </div>
+                    <p class="bio-text">
+                        Pacjentka praktyki od 3 lat. Regularnie korzysta z zabiegów higienizacyjnych wspomaganych systemem AI. Zauważalna poprawa stanu zdrowia jamy ustnej.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="right-column">
+                <div class="header-logo">
+                    <div class="curved-text">HIGIENA</div>
+                    <div class="company-name">STOMATOLOGICZNA AI</div>
+                </div>
+                
+                <div class="quote-block">
+                    <span class="quote-mark open">"</span>
+                    <p class="quote-text">
+                        System AI rewolucjonizuje sposób planowania zabiegów higienicznych. Dzięki precyzyjnej analizie każdy zabieg jest dokładnie dostosowany do moich indywidualnych potrzeb. Efekty są widoczne od pierwszej wizyty.
+                    </p>
+                    <span class="quote-mark close">"</span>
+                </div>
+                
+                <h2 class="section-subtitle">KORZYŚCI SYSTEMU</h2>
+                
+                <div class="body-content">
+                    <p>
+                        Personalizacja protokołów zabiegowych na podstawie analizy AI pozwala na osiągnięcie optymalnych rezultatów przy minimalnym dyskomforcie pacjenta podczas procedur higienizacyjnych.
+                    </p>
+                    <p>
+                        Automatyczna dokumentacja postępów leczenia umożliwia precyzyjne monitorowanie efektów terapii oraz wprowadzanie korekt w czasie rzeczywistym dla maksymalizacji skuteczności.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
