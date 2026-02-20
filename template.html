@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Tworzenia Spersonalizowanych Planów Higienicznych z AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables - Design System */
+        :root {
+            --color-pink-primary: #FFD9E5;
+            --color-pink-light: #FBEAEE;
+            --color-pink-accent: #F9DDE2;
+            --color-pink-pale: #F6E9E9;
+            --color-grey-light: #EAEAEA;
+            --color-grey-medium: #FADDE3;
+            --color-text-dark: #231F20;
+            --color-text-medium: #383838;
+            --color-text-light: #3C3335;
+            --color-background: #FEFAFA;
+            --color-white: #FFFFFF;
+            --color-black: #000000;
+            
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Lora', serif;
+            
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+        }
+
+        /* Print and Page Setup */
+        @page {
+            size: A4 portrait;
+            margin: 0;
+            padding: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+        }
+
+        /* Page breaks */
+        .page {
+            width: 210mm;
+            height: 297mm;
+            page-break-after: always;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page:last-child {
+            page-break-after: avoid;
+        }
+
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-uppercase { text-transform: uppercase; }
+        .font-heading { font-family: var(--font-heading); }
+        .font-body { font-family: var(--font-body); }
+
+        /* Page 1: Cover Page */
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(to bottom, 
+                var(--color-pink-primary) 0%, 
+                var(--color-pink-primary) 57%, 
+                var(--color-grey-light) 57%, 
+                var(--color-grey-light) 82%, 
+                var(--color-pink-primary) 82%, 
+                var(--color-pink-primary) 100%);
+        }
+
+        .cover-image-section {
+            height: 57%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 2%;
+            position: relative;
+        }
+
+        .cover-image {
+            width: 85%;
+            height: 46%;
+            background: url('https://via.placeholder.com/900x600/E8DBCF/000000?text=DOMINIKA+ZROBEK') center/cover;
+            border-radius: 0;
+            margin-bottom: auto;
+        }
+
+        .author-name {
+            font-family: var(--font-heading);
+            font-size: 1.5vw;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-text-dark);
+            margin-top: auto;
+            margin-bottom: 2%;
+        }
+
+        .title-section {
+            height: 25%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 8%;
+        }
+
+        .main-title {
+            font-family: var(--font-heading);
+            font-size: 6vw;
+            font-weight: 900;
+            line-height: 0.95;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: -0.01em;
+        }
+
+        .title-line-1, .title-line-3, .title-line-4 {
+            color: var(--color-text-dark);
+        }
+
+        .title-line-2 {
+            color: var(--color-pink-primary);
+        }
+
+        .subtitle-section {
+            height: 18%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 8%;
+        }
+
+        .subtitle {
+            font-family: var(--font-heading);
+            font-size: 2vw;
+            font-weight: 400;
+            line-height: 1.4;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 0.15em;
+            color: var(--color-text-dark);
+        }
+
+        /* Page 2: About/Bio Page */
+        .about-page {
+            background: #FEEFF2;
+            padding: 7% 8% 10% 0;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: var(--spacing-lg);
+        }
+
+        .about-title {
+            font-family: var(--font-heading);
+            font-size: 12vw;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            text-align: center;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--color-black);
+            text-stroke: 1px var(--color-black);
+            margin: 0 8%;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 45% 1fr;
+            gap: var(--spacing-lg);
+            height: 65%;
+        }
+
+        .about-image {
+            width: 100%;
+            height: 100%;
+            background: url('https://via.placeholder.com/500x800/E8DBCF/000000?text=PHOTO') center/cover;
+            margin-left: 0;
+        }
+
+        .about-text {
+            padding-left: var(--spacing-md);
+            padding-top: var(--spacing-md);
+        }
+
+        .about-text::first-letter {
+            float: left;
+            font-size: 6em;
+            line-height: 0.8;
+            padding-right: 8px;
+            padding-top: 4px;
+            font-family: var(--font-heading);
+            font-weight: 400;
+            color: var(--color-black);
+        }
+
+        .about-text p {
+            font-family: var(--font-heading);
+            font-size: 1.5vw;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            line-height: 2.0;
+            color: var(--color-black);
+            text-align: left;
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Page 3: Chapter Content Page */
+        .chapter-page {
+            background: var(--color-background);
+            padding-top: 6%;
+        }
+
+        .chapter-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding: 0 8%;
+        }
+
+        .chapter-title {
+            font-family: var(--font-heading);
+            font-size: 8vw;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.5em;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--color-text-light);
+            text-stroke: 1px var(--color-text-light);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .chapter-subtitle {
+            font-family: var(--font-heading);
+            font-size: 1.5vw;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1em;
+            color: var(--color-text-light);
+        }
+
+        .chapter-content-area {
+            background: var(--color-pink-light);
+            min-height: 75%;
+            padding: var(--spacing-xl) 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4%;
+            padding-left: 8%;
+            padding-right: 8%;
+        }
+
+        .content-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.5vw;
+            font-weight: 400;
+            color: var(--color-text-light);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .section-text {
+            font-family: var(--font-body);
+            font-size: 1.2vw;
+            font-weight: 400;
+            letter-spacing: 0.25em;
+            line-height: 1.8;
+            color: var(--color-text-light);
+            text-align: justify;
+        }
+
+        .chapter-footer {
+            height: 3%;
+            background: var(--color-grey-medium);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Page 4: Full Photo Divider */
+        .photo-divider-page {
+            background: url('https://via.placeholder.com/1200x1800/DDC9C9/111111?text=CHERRY+BLOSSOMS') center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2%;
+        }
+
+        .text-block {
+            background: var(--color-pink-pale);
+            width: 65%;
+            height: 10%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .text-block-text {
+            font-family: var(--font-heading);
+            font-size: 6.5vw;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--color-black);
+            text-align: center;
+        }
+
+        /* Page 5: Content with Images */
+        .content-images-page {
+            background: var(--color-white);
+        }
+
+        .header-band {
+            background: var(--color-pink-accent);
+            height: 22%;
+            padding: var(--spacing-lg) 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .page-title {
+            font-family: var(--font-heading);
+            font-size: 7vw;
+            font-weight: 700;
+            text-transform: uppercase;
+            line-height: 0.9;
+            color: var(--color-text-medium);
+        }
+
+        .header-image {
+            width: 30vw;
+            height: 30vw;
+            border-radius: 50%;
+            background: url('https://via.placeholder.com/400x400/E8DBCF/000000?text=IMAGE') center/cover;
+            position: absolute;
+            right: 5%;
+            top: -5%;
+        }
+
+        .main-content {
+            padding: var(--spacing-xl) 8%;
+        }
+
+        .content-subtitle {
+            font-family: var(--font-heading);
+            font-size: 2.5vw;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: var(--color-text-medium);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .body-text {
+            font-family: var(--font-body);
+            font-size: 1.2vw;
+            font-weight: 400;
+            text-transform: uppercase;
+            line-height: 1.8;
+            color: var(--color-text-medium);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .images-stats-section {
+            display: grid;
+            grid-template-columns: 65% 35%;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .image-gallery {
+            display: flex;
+            gap: 1.5%;
+            justify-content: flex-start;
+        }
+
+        .gallery-image {
+            width: 18vw;
+            height: 18vw;
+            border-radius: 50%;
+            background: url('https://via.placeholder.com/200x200/E8DBCF/000000?text=IMG') center/cover;
+        }
+
+        .stats-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stats-heading {
+            font-family: var(--font-heading);
+            font-size: 2vw;
+            font-weight: 400;
+            text-transform: uppercase;
+            line-height: 1.0;
+            color: var(--color-text-medium);
+            text-align: center;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .stats-number {
+            font-family: var(--font-heading);
+            font-size: 10vw;
+            font-weight: 300;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--color-text-medium);
+            text-stroke: 1px var(--color-text-medium);
+        }
+
+        .footer-band {
+            background: var(--color-pink-accent);
+            height: 22%;
+            padding: var(--spacing-lg) 8%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .footer-subtitle {
+            font-family: var(--font-heading);
+            font-size: 2.5vw;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: var(--color-text-medium);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-text {
+            font-family: var(--font-body);
+            font-size: 1.2vw;
+            font-weight: 400;
+            text-transform: uppercase;
+            line-height: 1.8;
+            color: var(--color-text-medium);
+        }
+
+        /* Page 6: 2x2 Grid Layout */
+        .grid-page {
+            background: var(--color-pink-light);
+            padding: var(--spacing-xl) 8%;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: var(--spacing-xl);
+        }
+
+        .grid-title {
+            font-family: var(--font-heading);
+            font-size: 8vw;
+            font-weight: 400;
+            text-transform: uppercase;
+            text-align: center;
+            color: var(--color-text-light);
+            letter-spacing: 0.2em;
+        }
+
+        .grid-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: var(--spacing-xl);
+        }
+
+        .grid-card {
+            background: var(--color-white);
+            padding: var(--spacing-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 2.5vw;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: var(--color-text-light);
+        }
+
+        .card-text {
+            font-family: var(--font-body);
+            font-size: 1.1vw;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            line-height: 1.6;
+            color: var(--color-text-light);
+        }
+
+        /* Page 7: Testimonial Page */
+        .testimonial-page {
+            background: var(--color-background);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xl);
+        }
+
+        .testimonial-image {
+            width: 60%;
+            height: 40%;
+            background: url('https://via.placeholder.com/600x400/E8DBCF/000000?text=TESTIMONIAL+IMAGE') center/cover;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .quote-mark {
+            font-family: var(--font-heading);
+            font-size: 8vw;
+            font-weight: 400;
+            color: var(--color-pink-primary);
+            line-height: 0.5;
+        }
+
+        .testimonial-text {
+            font-family: var(--font-heading);
+            font-size: 3vw;
+            font-weight: 400;
+            font-style: italic;
+            text-align: center;
+            color: var(--color-text-dark);
+            max-width: 80%;
+            line-height: 1.4;
+            margin: var(--spacing-lg) 0;
+        }
+
+        .testimonial-author {
+            font-family: var(--font-body);
+            font-size: 1.5vw;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--color-text-medium);
+            margin-top: var(--spacing-md);
+        }
+
+        /* Page 8: Content with Bio Footer */
+        .bio-footer-page {
+            background: var(--color-white);
+            display: grid;
+            grid-template-rows: 1fr auto;
+        }
+
+        .two-column-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            padding: var(--spacing-xl) 8%;
+        }
+
+        .bio-footer {
+            background: var(--color-pink-light);
+            padding: var(--spacing-lg) 8%;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: var(--spacing-lg);
+            align-items: center;
+        }
+
+        .bio-image {
+            width: 15vw;
+            height: 15vw;
+            border-radius: 50%;
+            background: url('https://via.placeholder.com/200x200/E8DBCF/000000?text=BIO') center/cover;
+        }
+
+        .bio-text {
+            font-family: var(--font-body);
+            font-size: 1.1vw;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--color-text-dark);
+        }
+
+        /* Page 9: Author Photo Page */
+        .author-page {
+            background: url('https://via.placeholder.com/1200x1800/E8DBCF/000000?text=AUTHOR+PORTRAIT') center/cover;
+            position: relative;
+        }
+
+        .author-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(255, 217, 229, 0.9));
+            padding: var(--spacing-xl) 8%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .author-quote {
+            font-family: var(--font-heading);
+            font-size: 2.5vw;
+            font-weight: 400;
+            font-style: italic;
+            text-align: center;
+            color: var(--color-text-dark);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .author-signature {
+            font-family: var(--font-heading);
+            font-size: 1.8vw;
+            font-weight: 500;
+            color: var(--color-text-dark);
+        }
+
+        /* Additional utility styles for content flexibility */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            position: relative;
+            padding-left: 2em;
+            margin-bottom: 0.5em;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--color-pink-primary);
+            font-weight: bold;
+        }
+
+        .callout {
+            background: var(--color-pink-pale);
+            border-left: 4px solid var(--color-pink-primary);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .callout-title {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            color: var(--color-text-dark);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .highlight {
+            background: var(--color-pink-primary);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+        }
+
+        /* Responsive adjustments for better PDF rendering */
+        @media print {
+            .page {
+                width: 210mm;
+                height: 297mm;
+                page-break-after: always;
+            }
+            
+            .page:last-child {
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1: Cover Page -->
+    <div class="page cover-page">
+        <div class="cover-image-section">
+            <div class="cover-image"></div>
+            <div class="author-name">DOMINIKA ZROBEK</div>
+        </div>
+        <div class="title-section">
+            <div class="main-title">
+                <div class="title-line-1">SYSTEM TWORZENIA</div>
+                <div class="title-line-2">SPERSONALIZOWANYCH</div>
+                <div class="title-line-3">PLANÓW HIGIENICZNYCH</div>
+                <div class="title-line-4">Z AI</div>
+            </div>
+        </div>
+        <div class="subtitle-section">
+            <div class="subtitle">
+                KOMPLETNY PRZEWODNIK KROK PO KROKU<br>
+                DLA NOWOCZESNEJ HIGIENISTKI STOMATOLOGICZNEJ
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: About/Bio Page -->
+    <div class="page about-page">
+        <div class="about-title">ABOUT</div>
+        <div class="about-content">
+            <div class="about-image"></div>
+            <div class="about-text">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Chapter Content Page -->
+    <div class="page chapter-page">
+        <div class="chapter-header">
+            <div class="chapter-title">TITLE HERE</div>
+            <div class="chapter-subtitle">S U B T I T L E</div>
+        </div>
+        <div class="chapter-content-area">
+            <div class="content-section">
+                <h3 class="section-title">Subtitle Here</h3>
+                <p class="section-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+            <div class="content-section">
+                <h3 class="section-title">Subtitle Here</h3>
+                <p class="section-text">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            <div class="content-section">
+                <h3 class="section-title">Subtitle Here</h3>
+                <p class="section-text">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt.</p>
+            </div>
+            <div class="content-section">
+                <h3 class="section-title">Subtitle Here</h3>
+                <p class="section-text">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
+            </div>
+        </div>
+        <div class="chapter-footer"></div>
+    </div>
+
+    <!-- Page 4: Full Photo Divider -->
+    <div class="page photo-divider-page">
+        <div class="text-block">
+            <div class="text-block-text">ADD</div>
+        </div>
+        <div class="text-block">
+            <div class="text-block-text">YOUR</div>
+        </div>
+        <div class="text-block">
+            <div class="text-block-text">TEXT</div>
+        </div>
+        <div class="text-block">
+            <div class="text-block-text">HERE</div>
+        </div>
+    </div>
+
+    <!-- Page 5: Content with Images -->
+    <div class="page content-images-page">
+        <div class="header-band">
+            <div class="page-title">TITLE<br>HERE</div>
+            <div class="header-image"></div>
+        </div>
+        <div class="main-content">
+            <h2 class="content-subtitle">SUBTITLE HERE</h2>
+            <p class="body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+            <p class="body-text">Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            
+            <div class="images-stats-section">
+                <div class="image-gallery">
+                    <div class="gallery-image"></div>
+                    <div class="gallery-image"></div>
+                    <div class="gallery-image"></div>
+                </div>
+                <div class="stats-block">
+                    <div class="stats-heading">DID YOU<br>KNOW?</div>
+                    <div class="stats-number">80%</div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-band">
+            <h2 class="footer-subtitle">SUBTITLE HERE</h2>
+            <p class="footer-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+    </div>
+
+    <!-- Page 6: 2x2 Grid Layout -->
+    <div class="page grid-page">
+        <div class="grid-title">GRID LAYOUT</div>
+        <div class="grid-content">
+            <div class="grid-card">
+                <h3 class="card-title">Card Title One</h3>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <div class="grid-card">
+                <h3 class="card-title">Card Title Two</h3>
+                <p class="card-text">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+            <div class="grid-card">
+                <h3 class="card-title">Card Title Three</h3>
+                <p class="card-text">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            </div>
+            <div class="grid-card">
+                <h3 class="card-title">Card Title Four</h3>
+                <p class="card-text">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 7: Testimonial Page -->
+    <div class="page testimonial-page">
+        <div class="testimonial-image"></div>
+        <div class="quote-mark">"</div>
+        <div class="testimonial-text">
+            "Ten system całkowicie zmienił sposób, w jaki pracuję z moimi pacjentami. AI pomaga mi tworzyć spersonalizowane plany, które przynoszą niesamowite rezultaty."
+        </div>
+        <div class="testimonial-author">— DR. ANNA KOWALSKA</div>
+    </div>
+
+    <!-- Page 8: Content with Bio Footer -->
+    <div class="page bio-footer-page">
+        <div class="two-column-content">
+            <div>
+                <h2 class="content-subtitle">O Autorce</h2>
+                <p class="body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p class="body-text">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            <div>
+                <h2 class="content-subtitle">Doświadczenie</h2>
+                <ul class="checklist">
+                    <li>10+ lat doświadczenia w higiena stomatologicznej</li>
+                    <li>Specjalizacja w AI i automatyzacji</li>
+                    <li>Autorka 15+ publikacji naukowych</li>
+                    <li>Wykładowczyni na uczelniach medycznych</li>
+                    <li>Konsultantka w 50+ klinikach</li>
+                </ul>
+            </div>
+        </div>
+        <div class="bio-footer">
+            <div class="bio-image"></div>
+            <div class="bio-text">
+                <strong>Dominika Zrobek</strong> to uznana ekspertka w dziedzinie higieny stomatologicznej i zastosowania sztucznej inteligencji w praktyce dentystycznej. Jej innowacyjne podejście do personalizacji planów higienicznych pomogło tysiącom higienistek w całej Polsce podnieść jakość opieki nad pacjentami.
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 9: Author Photo Page -->
+    <div class="page author-page">
+        <div class="author-overlay">
+            <div class="author-quote">
+                "Moją misją jest umożliwienie każdej higienistce stomatologicznej wykorzystania mocy AI do tworzenia planów, które naprawdę zmieniają życie pacjentów."
+            </div>
+            <div class="author-signature">Dominika Zrobek</div>
+        </div>
+    </div>
+
+    <!-- Additional Example Pages can be added here following the same pattern -->
+
+</body>
+</html>
