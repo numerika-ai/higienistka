@@ -798,15 +798,8 @@
                 });
                 const url = scriptUrl + '?' + params.toString();
                 
-                // Method 1: fetch no-cors GET
-                try {
-                    await fetch(url, { mode: 'no-cors', redirect: 'follow' });
-                } catch(e) {
-                    // Fallback: open in hidden window
-                    const w = window.open(url, '_blank', 'width=1,height=1,left=-100,top=-100');
-                    await new Promise(r => setTimeout(r, 3000));
-                    if (w) w.close();
-                }
+                // Simple fetch GET with no-cors
+                await fetch(url, { mode: 'no-cors' });
                 
                 showStatus('success', '🎉 Dziękujemy! Ebook został wysłany na Twojego maila. Sprawdź skrzynkę (także folder spam).');
                 form.reset();
