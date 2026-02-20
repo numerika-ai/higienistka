@@ -789,17 +789,27 @@
             submitBtn.innerHTML = '<div class="loading"></div> Wysyłanie...';
             
             try {
-                // Submit to Google Apps Script
-                const response = await fetch('https://script.google.com/macros/s/AKfycbzzRt5DLqdRnEmi-ekbZSnlTidXcZSSvjuG2psJac7pYYMwoDV3cf-Q3m1pouLOH-Mr0g/exec', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'text/plain',
-                    },
-                    body: JSON.stringify(formData)
+                // Submit via GET (Workspace POST bug workaround)
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbzzRt5DLqdRnEmi-ekbZSnlTidXcZSSvjuG2psJac7pYYMwoDV3cf-Q3m1pouLOH-Mr0g/exec';
+                const params = new URLSearchParams({
+                    imie: formData.imie,
+                    email: formData.email,
+                    consent: formData.consent.toString()
                 });
+                const url = scriptUrl + '?' + params.toString();
                 
-                // no-cors returns opaque response, assume success if no network error
+                // Use hidden iframe to avoid CORS issues
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = url;
+                document.body.appendChild(iframe);
+                
+                // Wait a moment for the request to go through
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Clean up iframe
+                document.body.removeChild(iframe);
+                
                 showStatus('success', '🎉 Dziękujemy! Ebook został wysłany na Twojego maila. Sprawdź skrzynkę (także folder spam).');
                 form.reset();
                 
