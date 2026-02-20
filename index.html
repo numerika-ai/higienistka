@@ -349,79 +349,7 @@
         .btn-primary { background: var(--primary, #0d9488); }
         .btn-primary:hover { background: var(--primary-dark, #115e59); }
         
-        /* Chat */
-        .chat-container {
-            background: var(--card);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        .chat-header {
-            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
-            color: white;
-            padding: 16px 20px;
-            font-weight: 600;
-        }
-        .chat-messages {
-            height: 400px;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        .chat-msg {
-            margin-bottom: 12px;
-            max-width: 85%;
-            animation: fadeIn 0.2s ease;
-        }
-        .chat-msg.bot { margin-right: auto; }
-        .chat-msg.user { margin-left: auto; }
-        .chat-msg .bubble {
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            white-space: pre-wrap;
-        }
-        .chat-msg.bot .bubble { background: #f1f5f9; color: var(--text); border-bottom-left-radius: 4px; }
-        .chat-msg.user .bubble { background: var(--teal); color: white; border-bottom-right-radius: 4px; }
-        .chat-input-row {
-            display: flex;
-            gap: 8px;
-            padding: 16px;
-            border-top: 1px solid #e2e8f0;
-        }
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            outline: none;
-        }
-        .chat-input:focus { border-color: var(--teal); }
-        .chat-send {
-            padding: 12px 20px;
-            background: var(--teal);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .chat-send:hover { background: var(--teal-dark); }
-        .chat-config {
-            padding: 16px 20px;
-            background: #fef3c7;
-            border-bottom: 1px solid #fde68a;
-            font-size: 0.85rem;
-        }
-        .chat-config input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            margin-top: 6px;
-            font-size: 0.85rem;
-        }
+        /* Chat styles removed */
         
         .hidden { display: none; }
         
@@ -481,10 +409,7 @@
             <p>Spersonalizowany plan higieny jamy ustnej dla Twojego pacjenta</p>
         </div>
         
-        <div class="tabs no-print">
-            <button class="tab active" onclick="switchTab('planner')">📋 Kreator Planu</button>
-            <button class="tab" onclick="switchTab('chat')">💬 Live Chat AI</button>
-        </div>
+        <!-- tabs removed -->
         
         <!-- PLANNER TAB -->
         <div id="tab-planner">
@@ -586,22 +511,7 @@
             </div>
         </div>
         
-        <!-- CHAT TAB -->
-        <div id="tab-chat" class="hidden">
-            <div class="chat-container">
-                <div class="chat-header">🦷 Asystent Higienistki — GPT-OSS 120B</div>
-                <div class="chat-config">
-                    ⚙️ Adres API (LiteLLM): 
-                    <input type="text" id="api-url" value="http://192.168.1.80:4000/v1/chat/completions" placeholder="http://192.168.1.80:4000/v1/chat/completions">
-                    <div style="margin-top:4px; color:#92400e;">Działa tylko w sieci lokalnej. <a href="#" onclick="testApi()">Testuj połączenie</a></div>
-                </div>
-                <div class="chat-messages" id="chat-messages"></div>
-                <div class="chat-input-row">
-                    <input class="chat-input" id="chat-input" placeholder="Wpisz 'Start' aby rozpocząć..." onkeydown="if(event.key==='Enter')sendChat()">
-                    <button class="chat-send" onclick="sendChat()">Wyślij</button>
-                </div>
-            </div>
-        </div>
+        <!-- chat tab removed -->
     </div>
 
 <script>
@@ -959,112 +869,7 @@ function resetPlanner() {
     renderQuestion();
 }
 
-// ============ TABS ============
-function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-planner').classList.add('hidden');
-    document.getElementById('tab-chat').classList.add('hidden');
-    
-    if (tab === 'planner') {
-        document.getElementById('tab-planner').classList.remove('hidden');
-        document.querySelectorAll('.tab')[0].classList.add('active');
-    } else {
-        document.getElementById('tab-chat').classList.remove('hidden');
-        document.querySelectorAll('.tab')[1].classList.add('active');
-        if (!chatInited) initChat();
-    }
-}
-
-// ============ LIVE CHAT ============
-let chatHistory = [];
-let chatInited = false;
-
-const SYSTEM_PROMPT = `Jesteś asystentem polskiej higienistki stomatologicznej.
-Twoje zadanie: zadać 7 pytań, a następnie złożyć gotowy plan higieny z bloków biblioteki.
-Pracujesz WYŁĄCZNIE na poniższej bibliotece bloków. Nie wymyślasz żadnych treści — kopiujesz dosłownie teksty.
-
-RODO: Jeśli higienistka wpisze imię, nazwisko, konkretny wiek, datę, numer zęba lub opis kliniczny — PRZERWIJ i napisz:
-"Proszę podać tylko literę odpowiedzi (a, b, c…) — bez danych osobowych pacjenta."
-
-Gdy higienistka wpisze cokolwiek — odpowiedz: "Zaczynamy. Odpowiadaj tylko literami — bez imion, dat i opisów klinicznych." i zadaj Pytanie 1.
-
-SEKWENCJA PYTAŃ:
-P1 — Problem główny: a) Zdrowe dziąsła b) Zapalenie dziąseł c) Nadwrażliwość/starcia d) Próchnica aktywna e) Kamień nazębny f) Halitoza
-P2 — Narzędzie: a) Soniczna b) Elektryczna c) Manualna
-P3 — Międzyzębowe: a) Szczoteczki b) Nić c) Irygator d) Irygator+nić+szczoteczki
-P4 — Pasta: a) Fluorek cyny b) Hydroksy rano+fluorek cyny wieczór c) Hydroksyapatyt
-P5 — Płyn: a) Tak b) Nie
-P6 — Skrobak: a) Tak b) Nie
-P7 — Wizyta: a) 2 tyg b) 4 mies c) 6 mies
-
-Po 7 odpowiedziach złóż plan. Nie wyświetlaj kodów bloków. Plan dla pacjenta.`;
-
-function initChat() {
-    chatInited = true;
-    chatHistory = [{ role: 'system', content: SYSTEM_PROMPT }];
-    addChatMsg('bot', 'Cześć! Jestem asystentem higienistki stomatologicznej. Wpisz "Start" aby rozpocząć tworzenie planu higieny dla pacjenta. 🦷');
-}
-
-function addChatMsg(who, text) {
-    const div = document.getElementById('chat-messages');
-    div.innerHTML += `<div class="chat-msg ${who}"><div class="bubble">${text.replace(/\n/g,'<br>')}</div></div>`;
-    div.scrollTop = div.scrollHeight;
-}
-
-async function sendChat() {
-    const input = document.getElementById('chat-input');
-    const msg = input.value.trim();
-    if (!msg) return;
-    input.value = '';
-    
-    addChatMsg('user', msg);
-    chatHistory.push({ role: 'user', content: msg });
-    
-    const apiUrl = document.getElementById('api-url').value;
-    
-    try {
-        addChatMsg('bot', '⏳ Myślę...');
-        const resp = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer sk-spark-litellm-2026'
-            },
-            body: JSON.stringify({
-                model: 'gpt-oss',
-                messages: chatHistory,
-                temperature: 0.3,
-                max_tokens: 4000
-            })
-        });
-        
-        // Remove "thinking" message
-        const msgs = document.getElementById('chat-messages');
-        msgs.removeChild(msgs.lastChild);
-        
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const data = await resp.json();
-        const reply = data.choices[0].message.content;
-        
-        chatHistory.push({ role: 'assistant', content: reply });
-        addChatMsg('bot', reply);
-    } catch (e) {
-        const msgs = document.getElementById('chat-messages');
-        msgs.removeChild(msgs.lastChild);
-        addChatMsg('bot', `❌ Błąd połączenia: ${e.message}\n\nSprawdź czy:\n• Jesteś w sieci lokalnej\n• LiteLLM działa na Sparku (192.168.1.80:4000)\n• Adres API jest poprawny`);
-    }
-}
-
-async function testApi() {
-    const apiUrl = document.getElementById('api-url').value.replace('/chat/completions', '/models');
-    try {
-        const resp = await fetch(apiUrl, { headers: { 'Authorization': 'Bearer sk-spark-litellm-2026' }});
-        if (resp.ok) alert('✅ Połączenie OK!');
-        else alert(`❌ Błąd: HTTP ${resp.status}`);
-    } catch(e) {
-        alert(`❌ Nie mogę się połączyć: ${e.message}`);
-    }
-}
+// Chat tab removed
 
 // Copy plan as plain text (original function)
 function copyPlanText() {
