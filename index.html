@@ -652,7 +652,7 @@
             <!-- Lead Capture Form -->
             <section class="form-section">
                 <h2 class="form-title">Pobierz darmowy ebook 📚</h2>
-                <p class="form-subtitle">Zostaw email — wyślemy Ci ebook "System Planów Higienizacyjnych z AI" + informacje o nowościach</p>
+                <p class="form-subtitle">Zostaw email — wyślemy Ci darmowy ebook "System Planów Higienizacyjnych z AI"</p>
                 
                 <form id="leadForm">
                     <div id="statusMessage"></div>
@@ -670,11 +670,26 @@
                     <div class="checkbox-group">
                         <input type="checkbox" id="consent" name="consent" required>
                         <label for="consent" class="checkbox-label">
-                            Wyrażam zgodę na przetwarzanie moich danych osobowych w celu 
-                            otrzymywania informacji o produktach i usługach Numerika.ai 
-                            zgodnie z RODO (Rozporządzenie UE 2016/679). *
+                            Podaję swój adres email w celu otrzymania darmowego ebooka. 
+                            Zapoznałam/em się z <a href="/polityka-prywatnosci" target="_blank" style="color: #2a9d8f; text-decoration: underline;">Polityką Prywatności</a>. *
                         </label>
                     </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="marketing" name="marketing">
+                        <label for="marketing" class="checkbox-label">
+                            Wyrażam zgodę na otrzymywanie od Numerika AI informacji handlowych 
+                            drogą elektroniczną (w tym newslettera i materiałów marketingowych) 
+                            na podany adres email, zgodnie z art. 393 i 394 ustawy — Prawo 
+                            komunikacji elektronicznej. Zgoda jest dobrowolna i może być cofnięta 
+                            w każdej chwili.
+                        </label>
+                    </div>
+
+                    <p style="font-size: 0.75rem; color: #999; margin-top: 8px;">
+                        Administratorem Twoich danych jest Numerika AI. 
+                        Szczegóły w <a href="/polityka-prywatnosci" target="_blank" style="color: #2a9d8f;">Polityce Prywatności</a>.
+                    </p>
 
                     <button type="submit" class="submit-btn" id="submitBtn">
                         📚 Pobierz ebook za darmo!
@@ -693,7 +708,7 @@
         // QR Code generation (inline SVG)
         function generateQR() {
             const qrContainer = document.getElementById('qrCode');
-            const url = 'https://numerika-ai.github.io/higienistka/landing.html';
+            const url = 'https://higienistki.numerika.ai/';
             
             // Simple QR code SVG for the URL (using a basic pattern)
             // In production, you'd use a proper QR library, but this creates a recognizable QR-like pattern
@@ -786,12 +801,13 @@
             const formData = {
                 imie: form.imie.value.trim(),
                 email: form.email.value.trim(),
-                consent: form.consent.checked
+                consent: form.consent.checked,
+                marketing: form.marketing.checked
             };
             
             // Validation
             if (!formData.imie || !formData.email || !formData.consent) {
-                showStatus('error', 'Wszystkie pola są wymagane.');
+                showStatus('error', 'Imię, email i zgoda na przetwarzanie danych są wymagane.');
                 return;
             }
             
@@ -810,7 +826,8 @@
                 const params = new URLSearchParams({
                     imie: formData.imie,
                     email: formData.email,
-                    consent: formData.consent.toString()
+                    consent: formData.consent.toString(),
+                    marketing: formData.marketing.toString()
                 });
                 const url = scriptUrl + '?' + params.toString();
                 
