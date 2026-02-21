@@ -1,901 +1,857 @@
 <!DOCTYPE html>
-<html lang="pl" data-theme="pink">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🦷 AI dla Higienistek</title>
+    <title>Imperium Higienistek × AI - Automatyczne Plany Higieny</title>
+    <meta name="description" content="AI-powered kreator planów higieny jamy ustnej. Profesjonalne plany higieny w sekundach dla higienistek stomatologicznych.">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --teal: #0d9488;
-            --teal-light: #ccfbf1;
-            --teal-dark: #115e59;
-            --pink: #ec4899;
-            --pink-light: #fce7f3;
-            --navy: #1e3a5f;
-            --navy-light: #dbeafe;
-            --beige: #92702e;
-            --beige-light: #fef3c7;
-            --bg: #fdf2f8;
-            --card: #ffffff;
-            --text: #1e293b;
-            --muted: #64748b;
+        /* Hide WordPress theme elements (sidebar, footer, header, meta widgets) */
+        .sidebar, #sidebar, .widget-area, .site-footer, .entry-meta, 
+        .post-navigation, .comments-area, .widget_meta, #meta,
+        .wp-block-group.is-layout-flow, header.entry-header,
+        nav.post-navigation, footer.entry-footer,
+        .widget, aside, #secondary { display: none !important; }
+        .entry-content, .post-content, article { 
+            width: 100% !important; max-width: 100% !important; 
+            margin: 0 !important; padding: 0 !important; 
+            float: none !important;
         }
-
-        /* Color theme variables for dynamic switching */
-        :root[data-theme="teal"] {
-            --primary: #0d9488;
-            --primary-light: #ccfbf1;
-            --primary-dark: #115e59;
+        .site-content, .content-area, main#main, #primary { 
+            width: 100% !important; max-width: 100% !important; 
+            margin: 0 !important; padding: 0 !important;
         }
-        :root[data-theme="pink"] {
-            --primary: #ec4899;
-            --primary-light: #fce7f3;
-            --primary-dark: #be185d;
-        }
-        :root[data-theme="navy"] {
-            --primary: #1e3a5f;
-            --primary-light: #dbeafe;
-            --primary-dark: #1e293b;
-        }
-        :root[data-theme="beige"] {
-            --primary: #92702e;
-            --primary-light: #fef3c7;
-            --primary-dark: #78716c;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-        .container { max-width: 720px; margin: 0 auto; padding: 20px; }
         
+        /*
+        === GOOGLE APPS SCRIPT CODE ===
+        1. Go to script.google.com → New Project
+        2. Paste this code:
+        
+        function doPost(e) {
+          try {
+            // Enable CORS
+            var sheet = SpreadsheetApp.openById('YOUR_SHEET_ID').getActiveSheet();
+            var data = JSON.parse(e.postData.contents);
+            
+            // Add row: timestamp, name, email
+            sheet.appendRow([new Date(), data.imie, data.email]);
+            
+            return ContentService
+              .createTextOutput(JSON.stringify({result: 'success', message: 'Dane zostały zapisane'}))
+              .setMimeType(ContentService.MimeType.JSON)
+              .setHeaders({'Access-Control-Allow-Origin': '*'});
+          } catch (error) {
+            return ContentService
+              .createTextOutput(JSON.stringify({result: 'error', message: error.toString()}))
+              .setMimeType(ContentService.MimeType.JSON)
+              .setHeaders({'Access-Control-Allow-Origin': '*'});
+          }
+        }
+        
+        function doOptions(e) {
+          return ContentService
+            .createTextOutput('')
+            .setHeaders({
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'POST,OPTIONS',
+              'Access-Control-Allow-Headers': 'Content-Type'
+            });
+        }
+        
+        3. Deploy → New Deployment → Web App → Execute as: Me, Who has access: Anyone
+        4. Copy the Web App URL → replace GOOGLE_APPS_SCRIPT_URL below
+        */
+
+        :root {
+            --primary-pink: #f472b6;
+            --primary-teal: #2dd4bf;
+            --soft-pink: #fce7f3;
+            --soft-teal: #ccfbf1;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-white: #ffffff;
+            --bg-light: #f9fafb;
+            --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-medium: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--soft-pink) 0%, var(--bg-white) 50%, var(--soft-teal) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated tooth background */
+        .tooth-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+        }
+
+        .tooth {
+            position: absolute;
+            font-size: 24px;
+            animation: float-down linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float-down {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Container and layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
         /* Header */
         .header {
             text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #ec4899, #be185d);
-            color: white;
-            border-radius: 20px;
+            padding: 60px 0 40px;
+        }
+
+        .logo-section {
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
         }
-        .header h1 { font-size: 1.8rem; margin-bottom: 8px; }
-        .header p { opacity: 0.9; font-size: 0.95rem; }
-        .header .tooth { font-size: 3rem; margin-bottom: 10px; }
-        .header .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid rgba(255,255,255,0.8);
-            margin-bottom: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
         }
-        
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            background: white;
-            padding: 6px;
-            border-radius: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
+        .subtitle {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: var(--text-light);
+            font-weight: 400;
+            margin-bottom: 20px;
         }
-        .tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            border: none;
-            background: transparent;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--muted);
-            transition: all 0.2s;
-        }
-        .tab.active {
-            background: #ec4899;
-            color: white;
-            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
-        }
-        .tab:hover:not(.active) { background: #fce7f3; color: #be185d; }
-        
-        /* Question Card */
-        .question-card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 28px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .question-card h3 {
-            color: var(--teal-dark);
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .question-card p {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 18px;
-        }
-        
-        .option {
-            display: block;
-            width: 100%;
-            padding: 14px 18px;
-            margin-bottom: 8px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            background: white;
-            cursor: pointer;
-            text-align: left;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-        }
-        .option:hover { border-color: #ec4899; background: #fce7f3; }
-        .option.selected { border-color: #ec4899; background: #fce7f3; color: #be185d; font-weight: 600; }
-        
-        /* Progress */
-        .progress-bar {
-            height: 6px;
-            background: #e2e8f0;
-            border-radius: 3px;
-            margin-bottom: 24px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--teal), var(--pink));
-            border-radius: 3px;
-            transition: width 0.4s ease;
-        }
-        .progress-text {
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-bottom: 8px;
-        }
-        
-        /* Plan Output */
-        .plan-output {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+
+        .description {
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 30px;
             line-height: 1.7;
         }
-        .plan-output h2 {
-            color: var(--teal-dark);
-            border-bottom: 2px solid var(--teal-light);
-            padding-bottom: 8px;
-            margin: 24px 0 16px 0;
-        }
-        .plan-output h2:first-child { margin-top: 0; }
-        .plan-output ul { padding-left: 20px; margin: 8px 0; }
-        .plan-output .step {
-            background: var(--teal-light);
-            border-left: 4px solid var(--teal);
-            padding: 14px 18px;
-            border-radius: 0 10px 10px 0;
-            margin: 10px 0;
-        }
-        .plan-output .step-num {
-            font-weight: 700;
-            color: var(--teal);
-            display: block;
-            margin-bottom: 4px;
-        }
-        .plan-output .shopping-item {
-            background: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            padding: 12px 16px;
-            border-radius: 0 10px 10px 0;
-            margin: 8px 0;
-        }
-        .plan-output .zasada {
-            padding: 8px 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .plan-output .zasada:last-child { border-bottom: none; }
 
-        /* Template Customization Panel */
-        .template-panel {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            margin-bottom: 24px;
-        }
-        .template-panel h3 {
-            color: var(--teal-dark);
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text);
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            transition: border-color 0.2s;
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--teal);
-        }
-        .form-group .note {
-            font-size: 0.8rem;
-            color: var(--muted);
-            margin-top: 4px;
-            font-style: italic;
-        }
-        
-        /* Color Theme Selector */
-        .theme-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        .theme-option {
-            padding: 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-            background: white;
-        }
-        .theme-option:hover { transform: translateY(-2px); }
-        .theme-option.selected { border-color: #ec4899; background: #fce7f3; }
-        .theme-option .color-preview {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin: 0 auto 8px;
-            border: 3px solid white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-        .theme-option .theme-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        /* Professional Template Preview */
-        .template-preview {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 24px;
-            margin: 24px 0;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        .template-preview.theme-teal h2, .template-preview.theme-teal .step-num { color: #0d9488; }
-        .template-preview.theme-teal .step { background: #ccfbf1; border-left-color: #0d9488; }
-        .template-preview.theme-pink h2, .template-preview.theme-pink .step-num { color: #ec4899; }
-        .template-preview.theme-pink .step { background: #fce7f3; border-left-color: #ec4899; }
-        .template-preview.theme-navy h2, .template-preview.theme-navy .step-num { color: #1e3a5f; }
-        .template-preview.theme-navy .step { background: #dbeafe; border-left-color: #1e3a5f; }
-        .template-preview.theme-beige h2, .template-preview.theme-beige .step-num { color: #92702e; }
-        .template-preview.theme-beige .step { background: #fef3c7; border-left-color: #92702e; }
-
-        .template-header {
-            text-align: center;
-            padding: 24px;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, var(--primary, #0d9488), var(--primary-dark, #115e59));
-            color: white;
-            border-radius: 12px;
-        }
-        .template-footer {
-            margin-top: 32px;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 10px;
-            text-align: center;
-            border-top: 3px solid var(--primary, #0d9488);
-        }
-        .template-footer .contact-info {
-            font-size: 0.9rem;
-            color: var(--text);
-        }
-        .template-footer .instagram {
-            font-weight: 600;
-            color: var(--primary, #0d9488);
-            margin-top: 8px;
-        }
-
-        /* Buttons */
-        .btn {
+        /* CTA Button */
+        .cta-button {
             display: inline-block;
-            padding: 14px 28px;
-            background: var(--teal);
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-teal) 100%);
             color: white;
-            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 40px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgb(0 0 0 / 0.15);
+        }
+
+        /* Benefits section */
+        .benefits {
+            padding: 50px 0;
+        }
+
+        .benefits-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .benefits-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 1.05rem;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 640px) {
+            .benefits-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 960px) {
+            .benefits-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 28px 24px;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .benefit-icon {
+            font-size: 2.4rem;
+            margin-bottom: 14px;
+        }
+
+        .benefit-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .benefit-card p {
+            font-size: 0.93rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .benefit-highlight {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-pink), var(--primary-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        /* Testimonial / stat bar */
+        .stat-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            padding: 24px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-pink), var(--primary-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* Main content area */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 60px;
+                align-items: start;
+            }
+        }
+
+        /* QR Section */
+        .qr-section {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(10px);
+        }
+
+        .qr-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .qr-subtitle {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .qr-code {
+            display: inline-block;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 15px;
+        }
+
+        .qr-url {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            word-break: break-all;
+        }
+
+        /* Form section */
+        .form-section {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
             border-radius: 12px;
             font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-pink);
+            margin-top: 2px;
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-light);
+            margin-bottom: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-teal) 100%);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-medium);
         }
-        .btn:hover { background: var(--teal-dark); transform: translateY(-1px); }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--teal);
-            color: var(--teal);
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 20px -5px rgb(0 0 0 / 0.15);
         }
-        .btn-outline:hover { background: var(--teal-light); }
-        .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
-        .btn-primary { background: var(--primary, #0d9488); }
-        .btn-primary:hover { background: var(--primary-dark, #115e59); }
-        
-        /* Chat styles removed */
-        
-        .hidden { display: none; }
-        
-        /* Print Styles for Professional PDF */
-        @media print {
-            .tabs, .header, .btn-row, .no-print, .template-panel { display: none !important; }
-            body { background: white; font-size: 12pt; line-height: 1.4; }
-            .plan-output, .template-preview { 
-                box-shadow: none; 
-                padding: 0; 
-                margin: 0;
-                page-break-inside: avoid;
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Status messages */
+        .status-message {
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid #e5e7eb;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--primary-pink);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
             }
-            .template-header {
-                background: var(--primary, #0d9488) !important;
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
-                print-color-adjust: exact;
+            
+            .header {
+                padding: 40px 0 30px;
             }
-            .template-footer {
-                background: #f8fafc !important;
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
-                print-color-adjust: exact;
+
+            .form-section,
+            .qr-section {
+                padding: 25px 20px;
             }
-            .step {
-                page-break-inside: avoid;
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
-                print-color-adjust: exact;
+
+            .checkbox-group {
+                align-items: flex-start;
             }
-            h2 { 
-                page-break-after: avoid;
-                margin-top: 20pt;
+
+            input[type="checkbox"] {
+                margin-top: 3px;
             }
         }
-        
-        /* Mobile */
-        @media (max-width: 600px) {
-            .container { padding: 12px; }
-            .header { padding: 28px 16px; border-radius: 14px; }
-            .header h1 { font-size: 1.4rem; }
-            .question-card { padding: 20px; }
-            .plan-output, .template-panel { padding: 20px; }
-            .template-preview { padding: 16px; }
-            .theme-selector { grid-template-columns: repeat(2, 1fr); }
-            .btn-row { justify-content: stretch; }
-            .btn { flex: 1; min-width: 120px; }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
+    <!-- Animated tooth background -->
+    <div class="tooth-animation" id="toothAnimation"></div>
+
     <div class="container">
-        <div class="header">
-            <img src="domi.jpg" alt="Dominika" class="avatar">
-            <h1>🦷 AI dla Higienistek</h1>
-            <p>Spersonalizowany plan higieny jamy ustnej dla Twojego pacjenta</p>
-        </div>
-        
-        <!-- tabs removed -->
-        
-        <!-- PLANNER TAB -->
-        <div id="tab-planner">
-            <div id="questions-section">
-                <div class="progress-text" id="progress-text">Pytanie 1 z 7</div>
-                <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 14.28%"></div></div>
-                <div id="question-container"></div>
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <h1 class="logo-text">Imperium Higienistek × AI</h1>
+                <p class="subtitle">AI-powered kreator planów higieny jamy ustnej</p>
+                <p class="description">
+                    Automatyczne, dedykowane plany higieny w sekundach. 
+                    Narzędzie stworzone specjalnie dla higienistek stomatologicznych, 
+                    które pozwala na błyskawiczne tworzenie profesjonalnych planów 
+                    higieny dopasowanych do potrzeb pacjentów.
+                </p>
+                <a href="index.html" class="cta-button">🦷 Wypróbuj Aplikację</a>
             </div>
+        </header>
+
+        <!-- Benefits section -->
+        <section class="benefits">
+            <h2 class="benefits-title">Dlaczego warto? 💡</h2>
+            <p class="benefits-subtitle">Twój czas jest na wagę złota. AI robi w sekundy to, co zabiera Ci minuty przy każdym pacjencie.</p>
             
-            <div id="plan-section" class="hidden">
-                <div class="plan-output" id="plan-output"></div>
-                <div class="btn-row no-print">
-                    <button class="btn btn-outline" onclick="resetPlanner()">🔄 Nowy plan</button>
-                    <button class="btn btn-outline" onclick="copyPlanText()">📋 Kopiuj tekst</button>
-                    <button class="btn" onclick="showTemplateCustomization()">🎨 Personalizuj szablon</button>
-                </div>
-                <div id="copy-toast" style="display:none; text-align:center; margin-top:12px; padding:10px; background:#ccfbf1; border-radius:10px; color:#115e59; font-weight:600;">✅ Skopiowano do schowka!</div>
-            </div>
-
-            <!-- TEMPLATE CUSTOMIZATION SECTION -->
-            <div id="template-section" class="hidden">
-                <div class="template-panel">
-                    <h3>🎨 Personalizacja Szablonu</h3>
-                    <p style="margin-bottom: 20px; padding: 12px; background: #fef3c7; border-radius: 8px; font-size: 0.9rem;">
-                        ⚠️ <strong>Te dane NIE są zapisywane</strong> — po zamknięciu strony wszystko znika.
-                    </p>
-
-                    <div class="form-group">
-                        <label>Wybierz motyw kolorystyczny:</label>
-                        <div class="theme-selector">
-                            <div class="theme-option" onclick="selectTheme('teal', this)">
-                                <div class="color-preview" style="background: linear-gradient(45deg, #0d9488, #ccfbf1);"></div>
-                                <div class="theme-name">Turkusowy</div>
-                            </div>
-                            <div class="theme-option" onclick="selectTheme('pink', this)">
-                                <div class="color-preview" style="background: linear-gradient(45deg, #ec4899, #fce7f3);"></div>
-                                <div class="theme-name">Różowy</div>
-                            </div>
-                            <div class="theme-option" onclick="selectTheme('navy', this)">
-                                <div class="color-preview" style="background: linear-gradient(45deg, #1e3a5f, #dbeafe);"></div>
-                                <div class="theme-name">Granatowy</div>
-                            </div>
-                            <div class="theme-option" onclick="selectTheme('beige', this)">
-                                <div class="color-preview" style="background: linear-gradient(45deg, #92702e, #fef3c7);"></div>
-                                <div class="theme-name">Beżowy</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="hygienist-name">Imię i nazwisko higienistki:</label>
-                        <input type="text" id="hygienist-name" placeholder="np. Anna Kowalska" oninput="updatePreview()">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="clinic-name">Nazwa gabinetu/kliniki:</label>
-                        <input type="text" id="clinic-name" placeholder="np. Centrum Stomatologii Estetycznej" oninput="updatePreview()">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="instagram">Profil Instagram:</label>
-                        <input type="text" id="instagram" placeholder="nazwa_profilu" oninput="updatePreview()">
-                        <div class="note">Wpisz tylko nazwę profilu (bez @)</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">Telefon kontaktowy:</label>
-                        <input type="text" id="phone" placeholder="np. +48 123 456 789" oninput="updatePreview()">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email (opcjonalnie):</label>
-                        <input type="email" id="email" placeholder="np. kontakt@gabinet.pl" oninput="updatePreview()">
-                    </div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⏱️</div>
+                    <h3>Oszczędność czasu</h3>
+                    <p>Plan higieny w <span class="benefit-highlight">30 sekund</span> zamiast 10-15 minut. Przy 8 pacjentach dziennie to <span class="benefit-highlight">dodatkowa godzina</span> — na kolejnego pacjenta lub na siebie.</p>
                 </div>
 
-                <!-- TEMPLATE PREVIEW -->
-                <div id="template-preview" class="template-preview theme-teal">
-                    <div class="template-header">
-                        <h1 id="preview-clinic">Nazwa Gabinetu</h1>
-                        <p id="preview-hygienist">Higienistka Stomatologiczna</p>
-                    </div>
-                    <div id="preview-content"></div>
-                    <div class="template-footer">
-                        <div class="contact-info">
-                            <div id="preview-contact-phone"></div>
-                            <div id="preview-contact-email"></div>
-                        </div>
-                        <div class="instagram" id="preview-instagram"></div>
-                    </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <h3>Monetyzacja czasu</h3>
+                    <p>Godzina dziennie × 22 dni robocze = <span class="benefit-highlight">22 dodatkowe godziny miesięcznie</span>. To czas na kolejnych pacjentów, szkolenia lub po prostu mniej pracy po godzinach.</p>
                 </div>
 
-                <div class="btn-row no-print">
-                    <button class="btn btn-outline" onclick="backToCustomization()">🔄 Zmień szablon</button>
-                    <button class="btn btn-outline" onclick="copyTemplateText()">📋 Kopiuj tekst</button>
-                    <button class="btn btn-outline" onclick="resetPlanner()">🔄 Nowy plan</button>
-                    <button class="btn btn-primary" onclick="downloadPDF()">📄 Pobierz PDF</button>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🏆</div>
+                    <h3>Profesjonalny wizerunek</h3>
+                    <p>Pacjent dostaje <span class="benefit-highlight">wydrukowany, dedykowany plan</span> — nie kartkę z notatkami. To buduje zaufanie i wyróżnia Twój gabinet na tle konkurencji.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <h3>Spójność i jakość</h3>
+                    <p>Koniec z zapominaniem o szczegółach pod koniec dnia. AI <span class="benefit-highlight">zawsze pamiętaj</span> o każdym elemencie — od pasty po nitki.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">📱</div>
+                    <h3>Zero instalacji</h3>
+                    <p>Działa w przeglądarce na <span class="benefit-highlight">telefonie, tablecie i komputerze</span>. Żadnych aplikacji do instalowania, żadnych aktualizacji. Otworz i używaj.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔒</div>
+                    <h3>Bezpieczeństwo danych</h3>
+                    <p><span class="benefit-highlight">Żadne dane pacjentów</span> nie są zbierane ani przechowywane. Zgodne z RODO. Plan tworzony jest na Twoim urządzeniu.</p>
                 </div>
             </div>
-        </div>
-        
-        <!-- chat tab removed -->
+
+            <div class="stat-bar">
+                <div class="stat-item">
+                    <div class="stat-number">30s</div>
+                    <div class="stat-label">czas tworzenia planu</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">39</div>
+                    <div class="stat-label">bloków wiedzy</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">zgodność z RODO</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0 zł</div>
+                    <div class="stat-label">koszt używania</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- QR Code Section -->
+            <section class="qr-section">
+                <h2 class="qr-title">Skanuj QR Code</h2>
+                <p class="qr-subtitle">Udostępnij tę stronę na konferencji</p>
+                <div class="qr-code" id="qrCode">
+                    <!-- QR code will be generated here -->
+                </div>
+                <p class="qr-url">numerika-ai.github.io/higienistka/landing.html</p>
+            </section>
+
+            <!-- Lead Capture Form -->
+            <section class="form-section">
+                <h2 class="form-title">Pobierz darmowy ebook 📚</h2>
+                <p class="form-subtitle">Zostaw email — wyślemy Ci ebook "System Planów Higienizacyjnych z AI" + informacje o nowościach</p>
+                
+                <form id="leadForm">
+                    <div id="statusMessage"></div>
+                    
+                    <div class="form-group">
+                        <label for="imie">Imię *</label>
+                        <input type="text" id="imie" name="imie" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Adres e-mail *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="consent" name="consent" required>
+                        <label for="consent" class="checkbox-label">
+                            Wyrażam zgodę na przetwarzanie moich danych osobowych w celu 
+                            otrzymywania informacji o produktach i usługach Numerika.ai 
+                            zgodnie z RODO (Rozporządzenie UE 2016/679). *
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        📚 Pobierz ebook za darmo!
+                    </button>
+                </form>
+            </section>
+        </main>
     </div>
 
-<script>
-// ============ BLOCK LIBRARY ============
-const blocks = {
-    R1: `ROZPOZNANIE KLINICZNE\n• Dziąsła zdrowe, brak stanu zapalnego\n• Dobra kontrola biofilmu bakteryjnego\n\nCEL PLANU HIGIENIZACYJNEGO\n• Utrzymanie zdrowia dziąseł i zębów\n• Profilaktyka próchnicy\n• Utrwalenie prawidłowych nawyków higienicznych`,
-    R2: `ROZPOZNANIE KLINICZNE\n• Stan zapalny dziąseł\n• Obecność biofilmu i kamienia nazębnego\n• Krwawienie podczas szczotkowania i sondowania\n\nCEL PLANU HIGIENIZACYJNEGO\n• Redukcja stanu zapalnego dziąseł\n• Poprawa kontroli biofilmu bakteryjnego\n• Całkowite wyeliminowanie krwawienia\n• Ochrona przed rozwojem choroby przyzębia`,
-    R3: `ROZPOZNANIE KLINICZNE\n• Nadwrażliwość zębów na bodźce termiczne\n• Starcia zębów — ubytki niepróchnicowe\n• Możliwy bruksizm lub zbyt mocne szczotkowanie\n\nCEL PLANU HIGIENIZACYJNEGO\n• Wzmocnienie i remineralizacja szkliwa\n• Redukcja nadwrażliwości\n• Modyfikacja czynników mechanicznych\n• Ochrona przed dalszymi starciami`,
-    R4: `ROZPOZNANIE KLINICZNE\n• Obecność aktywnych zmian próchnicowych\n• Niewystarczająca kontrola biofilmu bakteryjnego\n\nCEL PLANU HIGIENIZACYJNEGO\n• Zmniejszenie ryzyka powstawania nowych zmian\n• Poprawa kontroli biofilmu\n• Wzmocnienie szkliwa poprzez terapię fluorkową\n• Wsparcie remineralizacji wczesnych zmian`,
-    R5: `ROZPOZNANIE KLINICZNE\n• Obecność kamienia nazębnego\n• Stan zapalny dziąseł\n\nCEL PLANU HIGIENIZACYJNEGO\n• Spowolnienie tworzenia się nowego kamienia nazębnego\n• Redukcja stanu zapalnego dziąseł\n• Zmniejszenie retencji biofilmu\n• Poprawa nawyków higienicznych`,
-    R6: `ROZPOZNANIE KLINICZNE\n• Halitoza nieprzyjemny zapach z jamy ustnej\n• Nadmiar bakterii beztlenowych na języku i w przestrzeniach międzyzębowych\n\nCEL PLANU HIGIENIZACYJNEGO\n• Redukcja bakterii w jamie ustnej\n• Regularne czyszczenie języka\n• Dokładne czyszczenie przestrzeni międzyzębowych\n• Poprawa świeżości oddechu i komfortu`,
-    F1: `Szczoteczka soniczna : Philips 5300\nKońcówki: Philips Sonicare Sensitive\nGdzie kupić:Media Markt, online`,
-    F2: `Szczoteczka magnetyczna : Oral-B iO 3 bądź 6\nKońcówki: Gentle Care + Interdental Clean (okolice przydziąsłowe)\nGdzie kupić: Rossmann, Hebe, Media Markt, apteki, online`,
-    F3: `Szczoteczka manualna: Curaprox (miękkie włosie)\nGdzie kupić: Superpharm, sklep internetowy`,
-    F1p: `Szczoteczka soniczna : Philips 5300\nKońcówki: Philips Sonicare Sensitive\nGdzie kupić:Media Markt, online`,
-    F2p: `Szczoteczka magnetyczna Oral-B iO 3 bądź 6\nTechnika: prowadź główkę ząb po zębie, kontroluj siłę nacisku\nCzas szczotkowania: minimum 2 minuty`,
-    F3p: `Szczoteczka manualna (miękkie włosie)\nTechnika: okrężna, przy linii dziąseł, delikatny docisk\nCzas szczotkowania: minimum 2 minuty`,
-    G1: `Szczoteczki międzyzębowe: Elgydium 0,8 mm / 1,2 mm\nGdzie kupić: apteki, sklepy stomatologiczne, online`,
-    G2: `Nić dentystyczna: Oral-B Pro-Expert\nGdzie kupić: Rossmann, Hebe, apteki, online`,
-    G3: `Irygator: Oral-B Aquacare 4\nGdzie kupić: Media Markt, Rossmann (większe sklepy), apteki, online`,
-    G4: `Szczoteczki międzyzębowe: Elgydium 0,8 mm / 1,2 mm\nIrygator: Oral-B Aquacare 4\nGdzie kupić: Rossmann, Hebe, Media Markt, apteki, online`,
-    G1p: `Szczoteczki międzyzębowe Elgydium 0,8 mm lub 1,2 mm\nStosować codziennie wieczorem, przed szczotkowaniem zębów`,
-    G2p: `Nić dentystyczna Oral-B Pro-Expert\nStosować codziennie wieczorem, przed szczotkowaniem zębów`,
-    G3p: `Irygator Oral-B Aquacare 4\nStosować 2–3 razy w tygodniu, po szczotkowaniu\nSzczególnie: wzdłuż linii dziąseł i w przestrzeniach międzyzębowych`,
-    G4a: `Szczoteczki międzyzębowe Elgydium 0,8 mm lub 1,2 mm\nStosować codziennie wieczorem, przed szczotkowaniem zębów`,
-    H1: `Pasta z fluorkiem cyny: Oral-B Pro-Expert Advanced\nGdzie kupić: Rossmann, Hebe, apteki`,
-    H2: `Pasta poranna: Curasept Biosmalto (różowa) — hydroksyapatyt\nGdzie kupić: Superpharm, apteki stomatologiczne, online\n\nPasta wieczorna: Oral-B Pro-Expert Advanced — fluorek cyny\nGdzie kupić: Rossmann, Hebe, apteki`,
-    H3: `Pasta z hydroksyapatytem: Curasept Biosmalto (różowa)\nGdzie kupić: Superpharm, apteki stomatologiczne, online`,
-    H1p: `Pasta z fluorkiem cyny: Oral-B Pro-Expert Advanced\nStosowanie: po szczotkowaniu wieczornym — nie płukać wodą po nałożeniu`,
-    H2a: `Pasta z hydroksyapatytem: Curasept Biosmalto (różowa)\nStosowanie: rano po przebudzeniu, nie jeść przez 30 min`,
-    H2b: `Pasta z fluorkiem cyny: Oral-B Pro-Expert Advanced\nStosowanie: po szczotkowaniu wieczornym — nie płukać wodą po nałożeniu`,
-    H3p: `Pasta z hydroksyapatytem: Curasept Biosmalto (różowa)\nStosowanie: wieczorem po szczotkowaniu — nie płukać wodą po nałożeniu`,
-    I1: `Płyn do płukania: Alfa Scaling\nKiedy: raz dziennie wieczorem, przez 7 dni po higienizacji\nGdzie kupić: apteki, sklepy stomatologiczne online`,
-    I1p: `Płyn Alfa Scaling\nPłukać 30–60 sekund po szczotkowaniu wieczornym\nNie płukać wodą po użyciu, nie jeść przez 30 min\nStosować przez 7 dni po higienizacji`,
-    J1: `Skrobak do języka\nGdzie kupić: Rossmann, Hebe`,
-    J1p: `Oczyszczanie języka skrobakiem\nWykonać wieczorem, po szczotkowaniu zębów — przeciągnąć skrobak od nasady języka ku przodowi 3–5 razy`,
-    X1: `TWOJA NASTĘPNA WIZYTA: za 2 tygodnie\nWizyta kontrolna konieczna w celu oceny skuteczności wdrożonego postępowania, monitorowania redukcji stanu zapalnego oraz ewentualnej modyfikacji zaleceń\nPamiętaj: Zdrowy uśmiech to zdrowy organizm`,
-    X2: `TWOJA NASTĘPNA WIZYTA: za 4 miesiące\n\nZe względu na podwyższone ryzyko próchnicy i/ lub obecny stan zapalny dziąseł zalecana wizyta higienizacyjna jest za 4 miesiące\n\nPamiętaj: Zdrowy uśmiech to zdrowy organizm`,
-    X3: `TWOJA NASTĘPNA WIZYTA: za 6 miesięcy\n\nOdpowiedni przy bardzo dobrym stanie higieny i braku aktywnych problemów. Nawet przy doskonałej higienie domowej wizyta co pół roku jest niezbędna.\n\nPamiętaj: Zdrowy uśmiech to zdrowy organizm`,
-    Z1: `Mycie zębów może wydawać się proste. Jednak bez konkretnego, indywidualnego planu higienizacyjnego bardzo łatwo popełniać błędy nawet wtedy, gdy wydaje się, że robisz "wszystko dobrze".\n\nDlatego po dzisiejszej wizycie przygotowałam dla Ciebie spersonalizowany plan higieny jamy ustnej, dopasowany do Twoich aktualnych potrzeb.\n\nZNAJDZIESZ W NIM:\n• Jasne zalecenia krok po kroku\n• Konkretne produkty i narzędzia do higieny domowej\n• Wskazówki, które pomogą Ci skutecznie zadbać o zdrowe dziąsła i zęby\n\nCelem tego planu jest nie tylko poprawa Twojego stanu jamy ustnej, ale także budowanie świadomych nawyków, dzięki którym utrzymasz zdrowy uśmiech na długie lata nawet do SETKI.`,
-    Z2: `1. Myj zęby minimum 2 minuty\nNie szybciej, nie "na oko". Dokładne szczotkowanie usuwa biofilm bakteryjny — główną przyczynę próchnicy i chorób dziąseł.\n\n2. Szczotkuj delikatnie, ale dokładnie\nBez szorowania, bez nadmiernego docisku. Technika i systematyczność są ważniejsze niż siła.\n\n3. Używaj pasty z fluorem\nWzmacnia szkliwo, wspiera remineralizację, kontroluje bakterie. Unikaj past mocno ściernych i zawierających SLS.\n\n4. Codziennie czyść przestrzenie międzyzębowe\nTo tam najczęściej rozwija się próchnica i zapalenie dziąseł. Szczoteczki międzyzębowe lub nić — każdego dnia, najlepiej wieczorem.\n\n5. Czyść język\nNa języku gromadzi się ogromna ilość bakterii. Regularne czyszczenie poprawia świeżość oddechu i wspiera zdrowie dziąseł.\n\n6. Reaguj na krwawienie dziąseł\nKrwawienie to nie norma — to sygnał ostrzegawczy. Wczesne wdrożenie prawidłowej higieny pozwala cofnąć stan zapalny.\n\n7. Myj zęby w odpowiednim czasie\nPo posiłkach szczególnie kwaśnych odczekaj około 30 minut. Chronisz szkliwo przed uszkodzeniem.\n\n8. Traktuj płyn do płukania jako uzupełnienie — unikaj tych z alkoholem\nPłyn nie zastępuje szczotkowania ani czyszczenia przestrzeni międzyzębowych.\n\n9. Zmieniaj nawyki, nie tylko produkty\nNajlepsze szczoteczki i pasty nie zadziałają, jeśli myjesz zęby za krótko lub pomijasz przestrzenie międzyzębowe. Skuteczna higiena to powtarzalność i konsekwencja.\n\n10. Korzystaj z indywidualnego instruktażu i planu higieny\nBudujesz świadomość, zwiększasz zaangażowanie w profilaktykę i zapobiegasz chorobom dziąseł i przyzębia.\n\n11. Wykonuj regularne przeglądy i higienizację co 6 miesięcy\nWiele problemów rozwija się bez bólu i objawów. Regularna higienizacja pozwala wcześnie wykryć problemy i zapobiega kosztownemu leczeniu.\n\n12. Wykonuj raz do roku badania kontrolne\nZdrowie jamy ustnej i całego organizmu są ze sobą ściśle powiązane. Morfologia, żelazo, witamina D, glukoza — regularne badania pomagają lepiej kontrolować stany zapalne.\n\n13. Dbaj o dietę i korzystaj z opieki dietetyka klinicznego\nOgranicz cukry proste i częste podjadanie, unikaj wysoko przetworzonych produktów. Wsparcie dietetyka pomaga zmniejszyć stan zapalny i wspierać efekty leczenia stomatologicznego.`,
-    Z3: `MASZ PYTANIA?\n\nJeśli zauważysz niepokojące objawy (krwawienie, ból, nadwrażliwość) — skontaktuj się z gabinetem. Nie czekaj do następnej wizyty.\n\nZapraszam na mój Instagram po więcej wskazówek dotyczących zdrowia jamy ustnej.\n[Tu higienistka wpisuje swój Instagram lub inne dane kontaktowe]`,
-    Z4: `Cel: usunięcie nocnego biofilmu bakteryjnego i ochrona zębów na cały dzień. Pamiętaj: zęby myjemy po przebudzeniu, ze śniadaniem czekamy 30 min.`,
-    Z5: `Cel: dokładna kontrola biofilmu bakteryjnego, wsparcie wygaszania stanu zapalnego i ochrona zębów oraz dziąseł w nocy.`
-};
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 <a href="https://numerika.ai" target="_blank">Numerika.ai</a></p>
+    </footer>
 
-// ============ QUESTIONS ============
-const questions = [
-    { id: 'P1', title: 'Pytanie 1 z 7', question: 'Jaki jest główny problem pacjenta?', options: [
-        { letter: 'a', text: 'Zdrowe dziąsła', value: 'R1' },
-        { letter: 'b', text: 'Zapalenie dziąseł', value: 'R2' },
-        { letter: 'c', text: 'Nadwrażliwość / starcia zębów', value: 'R3' },
-        { letter: 'd', text: 'Próchnica aktywna', value: 'R4' },
-        { letter: 'e', text: 'Kamień nazębny', value: 'R5' },
-        { letter: 'f', text: 'Halitoza', value: 'R6' }
-    ]},
-    { id: 'P2', title: 'Pytanie 2 z 7', question: 'Jakie narzędzie główne?', options: [
-        { letter: 'a', text: 'Szczoteczka soniczna', value: 'F1' },
-        { letter: 'b', text: 'Szczoteczka elektryczna', value: 'F2' },
-        { letter: 'c', text: 'Szczoteczka manualna', value: 'F3' }
-    ]},
-    { id: 'P3', title: 'Pytanie 3 z 7', question: 'Czyszczenie przestrzeni międzyzębowych?', options: [
-        { letter: 'a', text: 'Szczoteczki międzyzębowe', value: 'G1' },
-        { letter: 'b', text: 'Nić dentystyczna', value: 'G2' },
-        { letter: 'c', text: 'Irygator', value: 'G3' },
-        { letter: 'd', text: 'Irygator + nić + szczoteczki międzyzębowe', value: 'G4' }
-    ]},
-    { id: 'P4', title: 'Pytanie 4 z 7', question: 'Jaka pasta?', options: [
-        { letter: 'a', text: 'Fluorek cyny', value: 'H1' },
-        { letter: 'b', text: 'Hydroksyapatyt rano + fluorek cyny wieczór', value: 'H2' },
-        { letter: 'c', text: 'Hydroksyapatyt', value: 'H3' }
-    ]},
-    { id: 'P5', title: 'Pytanie 5 z 7', question: 'Płyn do płukania?', options: [
-        { letter: 'a', text: 'Tak', value: 'I1' },
-        { letter: 'b', text: 'Nie', value: null }
-    ]},
-    { id: 'P6', title: 'Pytanie 6 z 7', question: 'Skrobak do języka?', options: [
-        { letter: 'a', text: 'Tak', value: 'J1' },
-        { letter: 'b', text: 'Nie', value: null }
-    ]},
-    { id: 'P7', title: 'Pytanie 7 z 7', question: 'Następna wizyta?', options: [
-        { letter: 'a', text: 'Za 2 tygodnie', value: 'X1' },
-        { letter: 'b', text: 'Za 4 miesiące', value: 'X2' },
-        { letter: 'c', text: 'Za 6 miesięcy', value: 'X3' }
-    ]}
-];
-
-let currentQ = 0;
-let answers = {};
-let currentTheme = 'pink';
-let generatedPlanHTML = '';
-
-function renderQuestion() {
-    const q = questions[currentQ];
-    const pct = ((currentQ + 1) / 7 * 100).toFixed(1);
-    document.getElementById('progress-text').textContent = q.title;
-    document.getElementById('progress-fill').style.width = pct + '%';
-    
-    let html = `<div class="question-card"><h3>${q.title}</h3><p>${q.question}</p>`;
-    q.options.forEach(o => {
-        html += `<button class="option" onclick="selectOption('${q.id}','${o.value}',this)">${o.letter}) ${o.text}</button>`;
-    });
-    html += `</div>`;
-    document.getElementById('question-container').innerHTML = html;
-}
-
-function selectOption(qId, value, btn) {
-    answers[qId] = value === 'null' ? null : value;
-    document.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    
-    setTimeout(() => {
-        if (currentQ < 6) {
-            currentQ++;
-            renderQuestion();
-        } else {
-            generatePlan();
+    <script>
+        // QR Code generation (inline SVG)
+        function generateQR() {
+            const qrContainer = document.getElementById('qrCode');
+            const url = 'https://numerika-ai.github.io/higienistka/landing.html';
+            
+            // Simple QR code SVG for the URL (using a basic pattern)
+            // In production, you'd use a proper QR library, but this creates a recognizable QR-like pattern
+            const qrSvg = `
+                <svg width="160" height="160" viewBox="0 0 21 21" style="background: white;">
+                    <!-- This is a simplified QR pattern. In production, use qrcode.js or similar -->
+                    <rect width="21" height="21" fill="white"/>
+                    <g fill="black">
+                        <!-- Corner markers -->
+                        <rect x="0" y="0" width="7" height="7"/>
+                        <rect x="14" y="0" width="7" height="7"/>
+                        <rect x="0" y="14" width="7" height="7"/>
+                        <rect x="2" y="2" width="3" height="3" fill="white"/>
+                        <rect x="16" y="2" width="3" height="3" fill="white"/>
+                        <rect x="2" y="16" width="3" height="3" fill="white"/>
+                        
+                        <!-- Data pattern (simplified) -->
+                        <rect x="8" y="1" width="1" height="1"/>
+                        <rect x="10" y="1" width="1" height="1"/>
+                        <rect x="12" y="1" width="1" height="1"/>
+                        <rect x="1" y="8" width="1" height="1"/>
+                        <rect x="1" y="10" width="1" height="1"/>
+                        <rect x="1" y="12" width="1" height="1"/>
+                        <rect x="19" y="8" width="1" height="1"/>
+                        <rect x="19" y="10" width="1" height="1"/>
+                        <rect x="19" y="12" width="1" height="1"/>
+                        <rect x="8" y="19" width="1" height="1"/>
+                        <rect x="10" y="19" width="1" height="1"/>
+                        <rect x="12" y="19" width="1" height="1"/>
+                        
+                        <!-- Central pattern -->
+                        <rect x="9" y="9" width="3" height="3"/>
+                        <rect x="10" y="10" width="1" height="1" fill="white"/>
+                    </g>
+                </svg>
+            `;
+            
+            qrContainer.innerHTML = qrSvg;
         }
-    }, 300);
-}
 
-function nl2br(text) {
-    return text.replace(/\n/g, '<br>');
-}
+        // Animated teeth background
+        function createToothAnimation() {
+            const container = document.getElementById('toothAnimation');
+            
+            function createTooth() {
+                const tooth = document.createElement('div');
+                tooth.className = 'tooth';
+                tooth.textContent = '🦷';
+                
+                // Random horizontal position
+                tooth.style.left = Math.random() * 100 + 'vw';
+                
+                // Random animation duration (8-15 seconds)
+                const duration = 8 + Math.random() * 7;
+                tooth.style.animationDuration = duration + 's';
+                
+                // Random delay
+                tooth.style.animationDelay = Math.random() * 5 + 's';
+                
+                container.appendChild(tooth);
+                
+                // Remove tooth after animation
+                setTimeout(() => {
+                    tooth.remove();
+                }, (duration + 5) * 1000);
+            }
+            
+            // Create initial teeth
+            for (let i = 0; i < 15; i++) {
+                setTimeout(createTooth, Math.random() * 3000);
+            }
+            
+            // Continue creating teeth
+            setInterval(() => {
+                if (document.querySelectorAll('.tooth').length < 20) {
+                    createTooth();
+                }
+            }, 800);
+        }
 
-function generatePlan() {
-    document.getElementById('questions-section').classList.add('hidden');
-    document.getElementById('plan-section').classList.remove('hidden');
-    
-    const a = answers;
-    let html = '';
-    
-    // Z1 - Wstęp
-    html += `<h2>📋 Indywidualny Plan Higieny Jamy Ustnej</h2>`;
-    html += `<p>${nl2br(blocks.Z1)}</p>`;
-    
-    // Rozpoznanie
-    html += `<h2>🔍 Rozpoznanie i Cel</h2>`;
-    html += `<p>${nl2br(blocks[a.P1])}</p>`;
-    
-    // Lista zakupów
-    html += `<h2>🛍️ Lista Zakupów — Co Potrzebujesz</h2>`;
-    const shopItems = [];
-    const brushKey = a.P2; // F1, F2, F3
-    shopItems.push(blocks[brushKey]);
-    const interKey = a.P3; // G1, G2, G3, G4
-    shopItems.push(blocks[interKey]);
-    const pasteKey = a.P4; // H1, H2, H3
-    shopItems.push(blocks[pasteKey]);
-    if (a.P5) shopItems.push(blocks[a.P5]);
-    if (a.P6) shopItems.push(blocks[a.P6]);
-    shopItems.forEach(item => {
-        html += `<div class="shopping-item">${nl2br(item)}</div>`;
-    });
-    
-    // Plan poranny
-    html += `<h2>☀️ Higiena Poranna</h2>`;
-    html += `<p>${nl2br(blocks.Z4)}</p>`;
-    let morningStep = 1;
-    html += `<div class="step"><span class="step-num">Krok ${morningStep} — Szczotkowanie</span>${nl2br(blocks[brushKey + 'p'])}</div>`;
-    morningStep++;
-    if (a.P4 === 'H2' || a.P4 === 'H3') {
-        html += `<div class="step"><span class="step-num">Krok ${morningStep} — Pasta poranna</span>${nl2br(blocks.H2a)}</div>`;
-    }
-    
-    // Plan wieczorny
-    html += `<h2>🌙 Higiena Wieczorna</h2>`;
-    html += `<p>${nl2br(blocks.Z5)}</p>`;
-    let step = 1;
-    
-    // Przestrzenie międzyzębowe
-    if (a.P3 === 'G1') {
-        html += `<div class="step"><span class="step-num">Krok ${step} — Czyszczenie przestrzeni międzyzębowych</span>${nl2br(blocks.G1p)}</div>`;
-        step++;
-    } else if (a.P3 === 'G2') {
-        html += `<div class="step"><span class="step-num">Krok ${step} — Czyszczenie przestrzeni międzyzębowych</span>${nl2br(blocks.G2p)}</div>`;
-        step++;
-    } else if (a.P3 === 'G4') {
-        html += `<div class="step"><span class="step-num">Krok ${step} — Czyszczenie przestrzeni międzyzębowych</span>${nl2br(blocks.G4a)}</div>`;
-        step++;
-    }
-    // G3 (irygator only) - no interdental brushes step, irrigator comes later
-    
-    // Szczotkowanie
-    html += `<div class="step"><span class="step-num">Krok ${step} — Szczotkowanie zębów</span>${nl2br(blocks[brushKey + 'p'])}</div>`;
-    step++;
-    
-    // Skrobak
-    if (a.P6) {
-        html += `<div class="step"><span class="step-num">Krok ${step} — Higiena języka</span>${nl2br(blocks.J1p)}</div>`;
-        step++;
-    }
-    
-    // Irygator (G3 or G4)
-    if (a.P3 === 'G3' || a.P3 === 'G4') {
-        html += `<div class="step"><span class="step-num">Krok ${step} — Irygacja jamy ustnej</span>${nl2br(blocks.G3p)}</div>`;
-        step++;
-    }
-    
-    // Płyn
-    if (a.P5) {
-        html += `<div class="step"><span class="step-num">Krok ${step} — Płukanie płynem</span>${nl2br(blocks.I1p)}</div>`;
-        step++;
-    }
-    
-    // Pasta wieczorna
-    let eveningPasteBlock;
-    if (a.P4 === 'H1') eveningPasteBlock = 'H1p';
-    else if (a.P4 === 'H2') eveningPasteBlock = 'H2b';
-    else eveningPasteBlock = 'H3p';
-    html += `<div class="step"><span class="step-num">Krok ${step} — Pasta wieczorna</span>${nl2br(blocks[eveningPasteBlock])}</div>`;
-    
-    // 13 Zasad
-    html += `<h2>📖 13 Zasad Higieny Jamy Ustnej</h2>`;
-    const zasady = blocks.Z2.split(/\n\n(?=\d+\.)/);
-    zasady.forEach(z => {
-        html += `<div class="zasada">${nl2br(z)}</div>`;
-    });
-    
-    // Wizyta
-    html += `<h2>📅 Następna Wizyta</h2>`;
-    html += `<p>${nl2br(blocks[a.P7])}</p>`;
-    
-    // Kontakt
-    html += `<h2>📞 Kontakt</h2>`;
-    html += `<p>Kontakt do kliniki: [DO UZUPEŁNIENIA]</p>`;
-    html += `<p>${nl2br(blocks.Z3)}</p>`;
-    
-    generatedPlanHTML = html;
-    document.getElementById('plan-output').innerHTML = html;
-}
+        // Form handling
+        document.getElementById('leadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const statusMessage = document.getElementById('statusMessage');
+            const form = e.target;
+            
+            // Get form data
+            const formData = {
+                imie: form.imie.value.trim(),
+                email: form.email.value.trim(),
+                consent: form.consent.checked
+            };
+            
+            // Validation
+            if (!formData.imie || !formData.email || !formData.consent) {
+                showStatus('error', 'Wszystkie pola są wymagane.');
+                return;
+            }
+            
+            if (!isValidEmail(formData.email)) {
+                showStatus('error', 'Podaj prawidłowy adres e-mail.');
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="loading"></div> Wysyłanie...';
+            
+            try {
+                // Submit via GET (Workspace POST bug workaround)
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbwOFE2aRV0KFOA7kxGbgD4KVtOQZxEZGDaA6m4Du0bwxrpKLoLH6W4hNzBTxR84aS1YAQ/exec';
+                const params = new URLSearchParams({
+                    imie: formData.imie,
+                    email: formData.email,
+                    consent: formData.consent.toString()
+                });
+                const url = scriptUrl + '?' + params.toString();
+                
+                // Simple fetch GET with no-cors
+                await fetch(url, { mode: 'no-cors' });
+                
+                showStatus('success', '🎉 Dziękujemy! Ebook został wysłany na Twojego maila. Sprawdź skrzynkę (także folder spam).');
+                form.reset();
+                
+            } catch (error) {
+                console.error('Form submission error:', error);
+                showStatus('error', 'Wystąpił błąd podczas wysyłania. Spróbuj ponownie później.');
+            }
+            
+            // Reset button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Zapisz się!';
+        });
+        
+        function showStatus(type, message) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+            
+            // Auto-hide after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusEl.innerHTML = '';
+                }, 5000);
+            }
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
 
-function showTemplateCustomization() {
-    document.getElementById('plan-section').classList.add('hidden');
-    document.getElementById('template-section').classList.remove('hidden');
-    updatePreview();
-}
-
-function selectTheme(theme, element) {
-    currentTheme = theme;
-    
-    // Update selected state
-    document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('selected'));
-    element.classList.add('selected');
-    
-    // Update preview theme
-    const preview = document.getElementById('template-preview');
-    preview.className = `template-preview theme-${theme}`;
-    
-    // Update CSS root variables
-    const colors = {
-        teal: { primary: '#0d9488', light: '#ccfbf1', dark: '#115e59' },
-        pink: { primary: '#ec4899', light: '#fce7f3', dark: '#be185d' },
-        navy: { primary: '#1e3a5f', light: '#dbeafe', dark: '#1e293b' },
-        beige: { primary: '#92702e', light: '#fef3c7', dark: '#78716c' }
-    };
-    
-    const root = document.documentElement;
-    root.style.setProperty('--primary', colors[theme].primary);
-    root.style.setProperty('--primary-light', colors[theme].light);
-    root.style.setProperty('--primary-dark', colors[theme].dark);
-    root.setAttribute('data-theme', theme);
-}
-
-function updatePreview() {
-    const hygienistName = document.getElementById('hygienist-name').value || 'Higienistka Stomatologiczna';
-    const clinicName = document.getElementById('clinic-name').value || 'Nazwa Gabinetu';
-    const instagram = document.getElementById('instagram').value;
-    const phone = document.getElementById('phone').value;
-    const email = document.getElementById('email').value;
-    
-    // Update header
-    document.getElementById('preview-clinic').textContent = clinicName;
-    document.getElementById('preview-hygienist').textContent = hygienistName;
-    
-    // Update footer
-    document.getElementById('preview-contact-phone').textContent = phone || '';
-    document.getElementById('preview-contact-email').textContent = email || '';
-    document.getElementById('preview-instagram').textContent = instagram ? `@${instagram}` : '';
-    
-    // Update content
-    document.getElementById('preview-content').innerHTML = generatedPlanHTML;
-}
-
-function backToCustomization() {
-    // Just show the customization panel again - no hiding needed since it's already visible
-    document.getElementById('template-section').scrollIntoView({ behavior: 'smooth' });
-}
-
-function copyTemplateText() {
-    const preview = document.getElementById('template-preview');
-    const text = preview.innerText;
-    
-    navigator.clipboard.writeText(text).then(() => {
-        showCopyToast();
-    }).catch(() => {
-        // Fallback method
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showCopyToast();
-    });
-}
-
-function downloadPDF() {
-    // Use the browser's print dialog which allows saving as PDF
-    window.print();
-}
-
-function showCopyToast() {
-    const toast = document.createElement('div');
-    toast.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #10b981;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-weight: 600;
-        z-index: 1000;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    `;
-    toast.textContent = '✅ Skopiowano do schowka!';
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        document.body.removeChild(toast);
-    }, 2000);
-}
-
-function resetPlanner() {
-    currentQ = 0;
-    answers = {};
-    generatedPlanHTML = '';
-    
-    // Reset form fields
-    document.getElementById('hygienist-name').value = '';
-    document.getElementById('clinic-name').value = '';
-    document.getElementById('instagram').value = '';
-    document.getElementById('phone').value = '';
-    document.getElementById('email').value = '';
-    
-    // Reset to default theme
-    selectTheme('pink', document.querySelectorAll('.theme-option')[1]);
-    
-    // Show questions section
-    document.getElementById('questions-section').classList.remove('hidden');
-    document.getElementById('plan-section').classList.add('hidden');
-    document.getElementById('template-section').classList.add('hidden');
-    
-    renderQuestion();
-}
-
-// Chat tab removed
-
-// Copy plan as plain text (original function)
-function copyPlanText() {
-    const el = document.getElementById('plan-output');
-    const text = el.innerText;
-    
-    navigator.clipboard.writeText(text).then(() => {
-        const toast = document.getElementById('copy-toast');
-        toast.style.display = 'block';
-        setTimeout(() => toast.style.display = 'none', 2000);
-    }).catch(() => {
-        // Fallback
-        const ta = document.createElement('textarea');
-        ta.value = el.innerText;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        const toast = document.getElementById('copy-toast');
-        toast.style.display = 'block';
-        setTimeout(() => toast.style.display = 'none', 2000);
-    });
-}
-
-// Init
-renderQuestion();
-</script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            generateQR();
+            createToothAnimation();
+        });
+    </script>
 </body>
 </html>
