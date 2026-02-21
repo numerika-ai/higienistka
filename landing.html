@@ -10,6 +10,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* Hide WordPress theme elements (sidebar, footer, header, meta widgets) */
+        .sidebar, #sidebar, .widget-area, .site-footer, .entry-meta, 
+        .post-navigation, .comments-area, .widget_meta, #meta,
+        .wp-block-group.is-layout-flow, header.entry-header,
+        nav.post-navigation, footer.entry-footer,
+        .widget, aside, #secondary { display: none !important; }
+        .entry-content, .post-content, article { 
+            width: 100% !important; max-width: 100% !important; 
+            margin: 0 !important; padding: 0 !important; 
+            float: none !important;
+        }
+        .site-content, .content-area, main#main, #primary { 
+            width: 100% !important; max-width: 100% !important; 
+            margin: 0 !important; padding: 0 !important;
+        }
+        
         /*
         === GOOGLE APPS SCRIPT CODE ===
         1. Go to script.google.com → New Project
