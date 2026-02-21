@@ -570,7 +570,7 @@
                     które pozwala na błyskawiczne tworzenie profesjonalnych planów 
                     higieny dopasowanych do potrzeb pacjentów.
                 </p>
-                <a href="/ankieta/" class="cta-button">🦷 Wypróbuj Aplikację</a>
+                <!-- CTA moved to form section below -->
             </div>
         </header>
 
@@ -651,8 +651,8 @@
 
             <!-- Lead Capture Form -->
             <section class="form-section">
-                <h2 class="form-title">Pobierz darmowy ebook 📚</h2>
-                <p class="form-subtitle">Zostaw email — wyślemy Ci darmowy ebook "System Planów Higienizacyjnych z AI"</p>
+                <h2 class="form-title">🦷 Wypróbuj Aplikację + Pobierz Ebook 📚</h2>
+                <p class="form-subtitle">Podaj email — wyślemy Ci darmowy ebook i od razu przetestujesz naszą aplikację AI do planów higieny</p>
                 
                 <form id="leadForm">
                     <div id="statusMessage"></div>
@@ -692,7 +692,7 @@
                     </p>
 
                     <button type="submit" class="submit-btn" id="submitBtn">
-                        📚 Pobierz ebook za darmo!
+                        🦷 Wypróbuj Aplikację + Pobierz Ebook!
                     </button>
                 </form>
             </section>
@@ -834,8 +834,13 @@
                 // Simple fetch GET with no-cors
                 await fetch(url, { mode: 'no-cors' });
                 
-                showStatus('success', '🎉 Dziękujemy! Ebook został wysłany na Twojego maila. Sprawdź skrzynkę (także folder spam).');
+                showStatus('success', '🎉 Ebook wysłany na Twojego maila! Przekierowuję do aplikacji...');
                 form.reset();
+                
+                // Redirect to app after 2 seconds
+                setTimeout(() => {
+                    window.location.href = '/ankieta/';
+                }, 2000);
                 
             } catch (error) {
                 console.error('Form submission error:', error);
