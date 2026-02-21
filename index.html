@@ -574,6 +574,56 @@
             </div>
         </header>
 
+        <!-- Lead Capture Form + App Access -->
+        <main class="main-content">
+            <section class="form-section">
+                <h2 class="form-title">🦷 Wypróbuj Aplikację + Pobierz Ebook 📚</h2>
+                <p class="form-subtitle">Podaj email — wyślemy Ci darmowy ebook i od razu przetestujesz naszą aplikację AI do planów higieny</p>
+                
+                <form id="leadForm">
+                    <div id="statusMessage"></div>
+                    
+                    <div class="form-group">
+                        <label for="imie">Imię *</label>
+                        <input type="text" id="imie" name="imie" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Adres e-mail *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="consent" name="consent" required>
+                        <label for="consent" class="checkbox-label">
+                            Podaję swój adres email w celu otrzymania darmowego ebooka. 
+                            Zapoznałam/em się z <a href="/polityka-prywatnosci" target="_blank" style="color: #2a9d8f; text-decoration: underline;">Polityką Prywatności</a>. *
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="marketing" name="marketing">
+                        <label for="marketing" class="checkbox-label">
+                            Wyrażam zgodę na otrzymywanie od Numerika AI informacji handlowych 
+                            drogą elektroniczną (w tym newslettera i materiałów marketingowych) 
+                            na podany adres email, zgodnie z art. 393 i 394 ustawy — Prawo 
+                            komunikacji elektronicznej. Zgoda jest dobrowolna i może być cofnięta 
+                            w każdej chwili.
+                        </label>
+                    </div>
+
+                    <p style="font-size: 0.75rem; color: #999; margin-top: 8px;">
+                        Administratorem Twoich danych jest Numerika AI. 
+                        Szczegóły w <a href="/polityka-prywatnosci" target="_blank" style="color: #2a9d8f;">Polityce Prywatności</a>.
+                    </p>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        🦷 Wypróbuj Aplikację + Pobierz Ebook!
+                    </button>
+                </form>
+            </section>
+        </main>
+
         <!-- Benefits section -->
         <section class="benefits">
             <h2 class="benefits-title">Dlaczego warto? 💡</h2>
@@ -637,59 +687,7 @@
             </div>
         </section>
 
-        <!-- Main content -->
-        <main class="main-content">
-            <!-- QR Code Section -->
-            <!-- QR section removed - QR code is on the presentation -->
-
-            <!-- Lead Capture Form -->
-            <section class="form-section">
-                <h2 class="form-title">🦷 Wypróbuj Aplikację + Pobierz Ebook 📚</h2>
-                <p class="form-subtitle">Podaj email — wyślemy Ci darmowy ebook i od razu przetestujesz naszą aplikację AI do planów higieny</p>
-                
-                <form id="leadForm">
-                    <div id="statusMessage"></div>
-                    
-                    <div class="form-group">
-                        <label for="imie">Imię *</label>
-                        <input type="text" id="imie" name="imie" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Adres e-mail *</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="consent" name="consent" required>
-                        <label for="consent" class="checkbox-label">
-                            Podaję swój adres email w celu otrzymania darmowego ebooka. 
-                            Zapoznałam/em się z <a href="/polityka-prywatnosci" target="_blank" style="color: #2a9d8f; text-decoration: underline;">Polityką Prywatności</a>. *
-                        </label>
-                    </div>
-
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="marketing" name="marketing">
-                        <label for="marketing" class="checkbox-label">
-                            Wyrażam zgodę na otrzymywanie od Numerika AI informacji handlowych 
-                            drogą elektroniczną (w tym newslettera i materiałów marketingowych) 
-                            na podany adres email, zgodnie z art. 393 i 394 ustawy — Prawo 
-                            komunikacji elektronicznej. Zgoda jest dobrowolna i może być cofnięta 
-                            w każdej chwili.
-                        </label>
-                    </div>
-
-                    <p style="font-size: 0.75rem; color: #999; margin-top: 8px;">
-                        Administratorem Twoich danych jest Numerika AI. 
-                        Szczegóły w <a href="/polityka-prywatnosci" target="_blank" style="color: #2a9d8f;">Polityce Prywatności</a>.
-                    </p>
-
-                    <button type="submit" class="submit-btn" id="submitBtn">
-                        🦷 Wypróbuj Aplikację + Pobierz Ebook!
-                    </button>
-                </form>
-            </section>
-        </main>
+        <!-- Old form section removed - moved above benefits -->
     </div>
 
     <!-- Footer -->
